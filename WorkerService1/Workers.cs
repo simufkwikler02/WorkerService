@@ -13,17 +13,17 @@ namespace WorkerService1
         private readonly ILogger<Generator> _logger;
         private readonly UdpClient _server;
 
-        public Generator(ILogger<Generator> logger, UdpClient server)
+        public Generator(ILogger<Generator> logger)
         {
             _logger = logger;
-            _server = server;
+            _server = new UdpClient("127.0.0.1", 22220);
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             while (!stoppingToken.IsCancellationRequested)
             {
-                //_logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
+                _logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
 
                 var message = DateTimeOffset.Now.ToString();
                 byte[] data = Encoding.UTF8.GetBytes(message);
@@ -39,10 +39,10 @@ namespace WorkerService1
         private readonly ILogger<Listener> _logger;
         private readonly UdpClient _server;
 
-        public Listener(ILogger<Listener> logger, UdpClient server)
+        public Listener(ILogger<Listener> logger)
         {
             _logger = logger;
-            _server = server;
+            _server = new UdpClient(22220);
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -50,7 +50,6 @@ namespace WorkerService1
             while (!stoppingToken.IsCancellationRequested)
             {
                 _logger.LogInformation("Listener running at: {time}", DateTimeOffset.Now);
-
                 
                 var result = await _server.ReceiveAsync();
                 var message = Encoding.UTF8.GetString(result.Buffer);
