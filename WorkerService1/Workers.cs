@@ -53,8 +53,8 @@ namespace WorkerService1
 
                 
                 var result = await _server.ReceiveAsync();
-                //var message = Encoding.UTF8.GetString(result.Buffer);
-                //Console.WriteLine(message);
+                var message = Encoding.UTF8.GetString(result.Buffer);
+                Console.WriteLine(message);
                 
 
                 await Task.Delay(1000, stoppingToken);
