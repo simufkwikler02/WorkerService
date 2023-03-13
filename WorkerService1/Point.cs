@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Globalization;
 
 namespace WorkerService1
 {
@@ -18,6 +19,8 @@ namespace WorkerService1
 
         public LBS LbsRecord { get; set; }
 
+        private readonly char Separator = ',';
+
         public Point()
         {
             this.Date = DateTime.Now;
@@ -29,13 +32,22 @@ namespace WorkerService1
 
         public void Parse(string line)
         {
-
+            throw new NotImplementedException();
         }
 
         public override string ToString()
         {
-            string result = string.Empty;
-            return result;
+            StringBuilder outLine = new StringBuilder();
+            outLine.Append(this.Date).Append(',');
+            outLine.Append(this.Lat.ToString(CultureInfo.InvariantCulture)).Append(',');
+            outLine.Append(this.Lon.ToString(CultureInfo.InvariantCulture)).Append(',');
+            outLine.Append(this.Sat).Append(',');
+            outLine.Append(this.LbsRecord.Mcc).Append(',');
+            outLine.Append(this.LbsRecord.Net).Append(',');
+            outLine.Append(this.LbsRecord.Area).Append(',');
+            outLine.Append(this.LbsRecord.Cell).AppendLine();
+
+            return outLine.ToString();
         }
 
     }
