@@ -24,15 +24,115 @@ namespace WorkerService1
         public Point()
         {
             this.Date = DateTime.Now;
-            this.Lat = 0;
-            this.Lon = 0;
-            this.Sat = 0;
+            this.Lat = 0.4;
+            this.Lon = 0.5;
+            this.Sat = 4;
             this.LbsRecord = new LBS();
         }
 
         public void Parse(string line)
         {
-            throw new NotImplementedException();
+            var lineSpan = line.AsSpan();
+            var ind = 0;
+
+            var indBuf = ind;
+            ind = line.IndexOf(Separator, indBuf + 1);
+            if (ind == -1)
+                return;
+
+            DateTime time;
+            if (!DateTime.TryParse(lineSpan.Slice(indBuf + 1, ind - indBuf - 1), out time))
+
+            {
+                Console.WriteLine($"line convert error,line skipped");
+                return;
+            }
+
+
+            indBuf = ind;
+            ind = line.IndexOf(Separator, indBuf + 1);
+            if (ind == -1)
+                return;
+
+            double Lat;
+            if (!double.TryParse(lineSpan.Slice(indBuf + 1, ind - indBuf - 1), NumberStyles.Float, CultureInfo.InvariantCulture, out Lat))
+            {
+                Console.WriteLine($"line convert error,line skipped");
+                return;
+            }
+      
+
+            indBuf = ind;
+            ind = line.IndexOf(Separator, indBuf + 1);
+            if (ind == -1)
+                return;
+
+            double Lon;
+            if (!double.TryParse(lineSpan.Slice(indBuf + 1, ind - indBuf - 1), NumberStyles.Float, CultureInfo.InvariantCulture, out Lon))
+            {
+                Console.WriteLine($"line convert error,line skipped");
+                return;
+            }
+
+            indBuf = ind;
+            ind = line.IndexOf(Separator, indBuf + 1);
+            if (ind == -1)
+                return;
+
+            int Mcc;
+            if (!int.TryParse(lineSpan.Slice(indBuf + 1, ind - indBuf - 1), out Mcc))
+            {
+                Console.WriteLine($"line convert error,line skipped");
+                return;
+            }
+
+
+            indBuf = ind;
+            ind = line.IndexOf(Separator, indBuf + 1);
+            if (ind == -1)
+                return;
+
+            int Net;
+            if (!int.TryParse(lineSpan.Slice(indBuf + 1, ind - indBuf - 1), out Net))
+            {
+                Console.WriteLine($"line convert error,line skipped");
+                return;
+            }
+
+
+            indBuf = ind;
+            ind = line.IndexOf(Separator, indBuf + 1);
+            if (ind == -1)
+                return;
+
+            int Area;
+            if (!int.TryParse(lineSpan.Slice(indBuf + 1, ind - indBuf - 1), out Area))
+            {
+                Console.WriteLine($"line convert error,line skipped");
+                return;
+            }
+
+
+            indBuf = ind;
+            ind = line.IndexOf(Separator, indBuf + 1);
+            if (ind == -1)
+                return;
+
+            int Cell;
+            if (!int.TryParse(lineSpan.Slice(indBuf + 1, ind - indBuf - 1), out Cell))
+            {
+                Console.WriteLine($"line convert error,line skipped");
+                return;
+            }
+
+            this.Date = time;
+            this.Lat = Lat;
+            this.Lon = Lon;
+            this.Sat = Sat;
+            this.LbsRecord.Mcc = Mcc;
+            this.LbsRecord.Net = Net;
+            this.LbsRecord.Area = Area;
+            this.LbsRecord.Cell = Cell;
         }
 
         public override string ToString()

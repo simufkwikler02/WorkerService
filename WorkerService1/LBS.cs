@@ -18,10 +18,10 @@ namespace WorkerService1
 
         public LBS()
         {           
-            this.Mcc = 0;
-            this.Net = 0;
-            this.Area = 0;
-            this.Cell = 0;
+            this.Mcc = 23;
+            this.Net = 54;
+            this.Area = 2;
+            this.Cell = 3;
         }
     }
 }
