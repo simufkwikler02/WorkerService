@@ -11,9 +11,9 @@ namespace WorkerService1
     {
         public DateTime Date { get; set; }
 
-        public double Lat { get; set; }
-
         public double Lon { get; set; }
+
+        public double Lat { get; set; }
 
         public int Sat { get; set; }
 
@@ -48,20 +48,6 @@ namespace WorkerService1
                 return;
             }
 
-
-            indBuf = ind;
-            ind = line.IndexOf(Separator, indBuf + 1);
-            if (ind == -1)
-                return;
-
-            double Lat;
-            if (!double.TryParse(lineSpan.Slice(indBuf + 1, ind - indBuf - 1), NumberStyles.Float, CultureInfo.InvariantCulture, out Lat))
-            {
-                Console.WriteLine($"line convert error,line skipped");
-                return;
-            }
-      
-
             indBuf = ind;
             ind = line.IndexOf(Separator, indBuf + 1);
             if (ind == -1)
@@ -73,6 +59,18 @@ namespace WorkerService1
                 Console.WriteLine($"line convert error,line skipped");
                 return;
             }
+
+            indBuf = ind;
+            ind = line.IndexOf(Separator, indBuf + 1);
+            if (ind == -1)
+                return;
+
+            double Lat;
+            if (!double.TryParse(lineSpan.Slice(indBuf + 1, ind - indBuf - 1), NumberStyles.Float, CultureInfo.InvariantCulture, out Lat))
+            {
+                Console.WriteLine($"line convert error,line skipped");
+                return;
+            }          
 
             indBuf = ind;
             ind = line.IndexOf(Separator, indBuf + 1);
@@ -126,13 +124,10 @@ namespace WorkerService1
             }
 
             this.Date = time;
-            this.Lat = Lat;
             this.Lon = Lon;
+            this.Lat = Lat;
             this.Sat = Sat;
-            this.LbsRecord.Mcc = Mcc;
-            this.LbsRecord.Net = Net;
-            this.LbsRecord.Area = Area;
-            this.LbsRecord.Cell = Cell;
+            this.LbsRecord = new LBS(Mcc, Net, Area, Cell);
         }
 
         public override string ToString()
