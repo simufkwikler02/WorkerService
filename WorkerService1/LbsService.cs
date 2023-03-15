@@ -4,7 +4,7 @@ namespace WorkerService1
 {
     public class LbsService
     {
-        private readonly Dictionary<LBS, (double, double)> keyValuePairs = new Dictionary<LBS, (double, double)>();
+        private readonly Dictionary<LBS, (double, double)> keyValuePairs = new();
         private readonly char Separator = ',';
         public void ReadAndSave(string filePath)
         {
@@ -123,8 +123,8 @@ namespace WorkerService1
         {
             if(!this.keyValuePairs.TryGetValue(Lbs, out (double,double) value))
             {
-                lon = -1;
-                lat = -1;
+                lon = default;
+                lat = default;
                 return false;
             }
             lon = value.Item1;
@@ -132,19 +132,22 @@ namespace WorkerService1
             return true;
         }
 
-        public bool TryFindLbs(out LBS Lbs, double lon, double lat)
+        public LBS FindLbs(double lon, double lat)
         {
+            double minLength = double.MaxValue;
+            LBS lbs = new LBS();
+
             foreach (var item in this.keyValuePairs)
             {
-                if (item.Value.Item1 == lon && item.Value.Item2 == lat)
+                double lenght = Math.Sqrt(Math.Pow(Math.Abs(lon - item.Value.Item1), 2) + Math.Pow(Math.Abs(lat - item.Value.Item2), 2));
+                if (lenght < minLength)
                 {
-                    Lbs = item.Key;
-                    return true;
+                    minLength = lenght;
+                    lbs = item.Key;
                 }
             }
 
-            Lbs = new LBS();
-            return false;
+            return lbs;
         }
     }
     

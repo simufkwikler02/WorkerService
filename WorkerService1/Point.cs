@@ -11,7 +11,7 @@ namespace WorkerService1
 
         public double Lat { get; set; }
 
-        public int Sat { get; set; }
+        public int Sat { get; set; } = 0;
 
         public LBS LbsRecord { get; set; }
 

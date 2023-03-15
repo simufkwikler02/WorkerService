@@ -40,8 +40,10 @@ namespace ConsoleApp_work
         private void LineEditor(StringBuilder outLine, string line)
         {
             outLine.Clear();
+            var indBuf = 0;
+            var ind = 0;
             var lineSpan = line.AsSpan();
-            var ind = line.IndexOf(Separator);
+            ind = line.IndexOf(Separator);
             if (ind == -1)
                 return;
 
@@ -52,9 +54,8 @@ namespace ConsoleApp_work
             if (!(firstLine[0] == 'G' && firstLine[1] == 'S' && firstLine[2] == 'M'))
                 return;
 
-            var indBuf = ind;
-            ind = line.IndexOf(Separator, indBuf + 1);
-            if (ind == -1)
+            
+            if (!TryNextWord(line, ref ind, ref indBuf))
                 return;
 
             ushort Mcc;
@@ -65,9 +66,7 @@ namespace ConsoleApp_work
             }
 
 
-            indBuf = ind;
-            ind = line.IndexOf(Separator, indBuf + 1);
-            if (ind == -1)
+            if (!TryNextWord(line, ref ind, ref indBuf))
                 return;
 
             byte Net;
@@ -78,9 +77,7 @@ namespace ConsoleApp_work
             }
 
 
-            indBuf = ind;
-            ind = line.IndexOf(Separator, indBuf + 1);
-            if (ind == -1)
+            if (!TryNextWord(line, ref ind, ref indBuf))
                 return;
 
             ushort Area;
@@ -91,9 +88,7 @@ namespace ConsoleApp_work
             }
 
 
-            indBuf = ind;
-            ind = line.IndexOf(Separator, indBuf + 1);
-            if (ind == -1)
+            if (!TryNextWord(line, ref ind, ref indBuf))
                 return;
 
             uint Cell;
@@ -103,14 +98,10 @@ namespace ConsoleApp_work
                 return;
             }
 
-            indBuf = ind;
-            ind = line.IndexOf(Separator, indBuf + 1);
-            if (ind == -1)
+            if (!TryNextWord(line, ref ind, ref indBuf))
                 return;
 
-            indBuf = ind;
-            ind = line.IndexOf(Separator, indBuf + 1);
-            if (ind == -1)
+            if (!TryNextWord(line, ref ind, ref indBuf))
                 return;
 
             double Lon;
@@ -120,9 +111,7 @@ namespace ConsoleApp_work
                 return;
             }
 
-            indBuf = ind;
-            ind = line.IndexOf(Separator, indBuf + 1);
-            if (ind == -1)
+            if (!TryNextWord(line, ref ind, ref indBuf))
                 return;
 
             double Lat;
@@ -139,6 +128,15 @@ namespace ConsoleApp_work
             outLine.Append(Cell).Append(',');
             outLine.Append(Lon.ToString(CultureInfo.InvariantCulture)).Append(',');
             outLine.Append(Lat.ToString(CultureInfo.InvariantCulture)).AppendLine();
+        }
+
+        public bool TryNextWord(string line, ref int ind, ref int indBuf)
+        {
+            indBuf = ind;
+            ind = line.IndexOf(Separator, indBuf + 1);
+            if (ind == -1)
+                return false;
+            return true;
         }
 
     }
