@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Text;
 using System.Globalization;
-using System.IO.Compression;
-using System.IO;
 
 
 namespace ConsoleApp_work

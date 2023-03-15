@@ -1,9 +1,5 @@
-﻿using System;
-using System.IO;
-using ConsoleApp_work;
+﻿using ConsoleApp_work;
 using System.Diagnostics;
-using System.Net;
-using System.Net.NetworkInformation;
 
 
 var time = new Stopwatch();
