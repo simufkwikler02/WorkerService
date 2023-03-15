@@ -44,9 +44,7 @@ namespace WorkerService1
                 return;
             }
 
-            indBuf = ind;
-            ind = line.IndexOf(Separator, indBuf + 1);
-            if (ind == -1)
+            if (!TryNextWord(line, ref ind, ref indBuf))
                 return;
 
             double Lon;
@@ -56,9 +54,7 @@ namespace WorkerService1
                 return;
             }
 
-            indBuf = ind;
-            ind = line.IndexOf(Separator, indBuf + 1);
-            if (ind == -1)
+            if (!TryNextWord(line, ref ind, ref indBuf))
                 return;
 
             double Lat;
@@ -66,11 +62,19 @@ namespace WorkerService1
             {
                 Console.WriteLine($"line convert error,line skipped");
                 return;
-            }          
+            }
 
-            indBuf = ind;
-            ind = line.IndexOf(Separator, indBuf + 1);
-            if (ind == -1)
+            if (!TryNextWord(line, ref ind, ref indBuf))
+                return;
+
+            int Sat;
+            if (!int.TryParse(lineSpan.Slice(indBuf + 1, ind - indBuf - 1), out Sat))
+            {
+                Console.WriteLine($"line convert error,line skipped");
+                return;
+            }
+
+            if (!TryNextWord(line, ref ind, ref indBuf))
                 return;
 
             int Mcc;
@@ -81,9 +85,7 @@ namespace WorkerService1
             }
 
 
-            indBuf = ind;
-            ind = line.IndexOf(Separator, indBuf + 1);
-            if (ind == -1)
+            if (!TryNextWord(line, ref ind, ref indBuf))
                 return;
 
             int Net;
@@ -94,9 +96,7 @@ namespace WorkerService1
             }
 
 
-            indBuf = ind;
-            ind = line.IndexOf(Separator, indBuf + 1);
-            if (ind == -1)
+            if (!TryNextWord(line, ref ind, ref indBuf))
                 return;
 
             int Area;
@@ -107,16 +107,25 @@ namespace WorkerService1
             }
 
 
-            indBuf = ind;
-            ind = line.IndexOf(Separator, indBuf + 1);
-            if (ind == -1)
-                return;
+            if (!TryNextWord(line, ref ind, ref indBuf))
+                ind = -1;
 
             int Cell;
-            if (!int.TryParse(lineSpan.Slice(indBuf + 1, ind - indBuf - 1), out Cell))
+            if (ind == -1)
             {
-                Console.WriteLine($"line convert error,line skipped");
-                return;
+                if (!int.TryParse(lineSpan.Slice(indBuf + 1), out Cell))
+                {
+                    Console.WriteLine($"line convert error,line skipped");
+                    return;
+                }
+            }
+            else
+            {
+                if (!int.TryParse(lineSpan.Slice(indBuf + 1, ind - indBuf - 1), out Cell))
+                {
+                    Console.WriteLine($"line convert error,line skipped");
+                    return;
+                }
             }
 
             this.Date = time;
@@ -139,6 +148,15 @@ namespace WorkerService1
             outLine.Append(this.LbsRecord.Cell).AppendLine();
 
             return outLine.ToString();
+        }
+
+        public bool TryNextWord(string line, ref int ind, ref int indBuf)
+        {
+            indBuf = ind;
+            ind = line.IndexOf(Separator, indBuf + 1);
+            if (ind == -1)
+                return false;
+            return true;
         }
 
     }

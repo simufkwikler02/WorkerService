@@ -21,11 +21,10 @@ namespace WorkerService1
                 while ((line = reader.ReadLine()) != null)
                 {
                     var lineSpan = line.AsSpan();
-                    var ind = 0;                   
+                    var ind = -1;
+                    var indBuf = 0;
 
-                    var indBuf = ind;
-                    ind = line.IndexOf(Separator, indBuf);
-                    if (ind == -1)
+                    if (!TryNextWord(line, ref ind, ref indBuf))
                         return;
 
                     int Mcc;
@@ -36,9 +35,7 @@ namespace WorkerService1
                     }
 
 
-                    indBuf = ind;
-                    ind = line.IndexOf(Separator, indBuf + 1);
-                    if (ind == -1)
+                    if (!TryNextWord(line, ref ind, ref indBuf))
                         return;
 
                     int Net;
@@ -49,9 +46,7 @@ namespace WorkerService1
                     }
 
 
-                    indBuf = ind;
-                    ind = line.IndexOf(Separator, indBuf + 1);
-                    if (ind == -1)
+                    if (!TryNextWord(line, ref ind, ref indBuf))
                         return;
 
                     int Area;
@@ -62,9 +57,7 @@ namespace WorkerService1
                     }
 
 
-                    indBuf = ind;
-                    ind = line.IndexOf(Separator, indBuf + 1);
-                    if (ind == -1)
+                    if (!TryNextWord(line, ref ind, ref indBuf))
                         return;
 
                     int Cell;
@@ -74,9 +67,7 @@ namespace WorkerService1
                         return;
                     }
 
-                    indBuf = ind;
-                    ind = line.IndexOf(Separator, indBuf + 1);
-                    if (ind == -1)
+                    if (!TryNextWord(line, ref ind, ref indBuf))
                         return;
 
                     double Lon;
@@ -86,9 +77,9 @@ namespace WorkerService1
                         return;
                     }
 
-                    indBuf = ind;
-                    ind = line.IndexOf(Separator, indBuf + 1);
-                    
+
+                    if (!TryNextWord(line, ref ind, ref indBuf))
+                        ind = -1;
 
                     double Lat;
                     if (ind == -1)
@@ -148,6 +139,15 @@ namespace WorkerService1
             }
 
             return lbs;
+        }
+
+        public bool TryNextWord(string line, ref int ind, ref int indBuf)
+        {
+            indBuf = ind;
+            ind = line.IndexOf(Separator, indBuf + 1);
+            if (ind == -1)
+                return false;
+            return true;
         }
     }
     

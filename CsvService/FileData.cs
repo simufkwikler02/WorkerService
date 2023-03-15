@@ -41,13 +41,14 @@ namespace ConsoleApp_work
         {
             outLine.Clear();
             var indBuf = 0;
-            var ind = 0;
+            var ind = -1;
             var lineSpan = line.AsSpan();
-            ind = line.IndexOf(Separator);
-            if (ind == -1)
+
+            if (!TryNextWord(line, ref ind, ref indBuf))
                 return;
 
             var firstLine = lineSpan.Slice(0, ind);
+
             if (firstLine.Length != 3)
                 return;
 
@@ -138,6 +139,5 @@ namespace ConsoleApp_work
                 return false;
             return true;
         }
-
     }
 }
