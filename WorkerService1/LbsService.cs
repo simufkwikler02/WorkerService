@@ -137,9 +137,19 @@ namespace WorkerService1
             return true;
         }
 
-        public LBS FindLbs(double lat, double lng)
+        public bool TryFindLbs(out LBS Lbs, double lon, double lat)
         {
-            throw new NotImplementedException();
+            foreach (var item in this.keyValuePairs)
+            {
+                if (item.Value.Item1 == lon && item.Value.Item2 == lat)
+                {
+                    Lbs = item.Key;
+                    return true;
+                }
+            }
+
+            Lbs = new LBS();
+            return false;
         }
     }
     

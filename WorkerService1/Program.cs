@@ -7,8 +7,10 @@ using WorkerService1;
 //serviceee.ReadAndSave("D:\\out_257.csv");
 //double lat;
 //double lon;
-//var lbs = new LBS(257,2,84,55722);
-//serviceee.TryGetLatLng(lbs,out lon,out lat);
+//var lbs = new LBS(257, 2, 84, 55722);
+//serviceee.TryGetLatLng(lbs, out lon, out lat);
+//lbs = new LBS();
+//serviceee.TryFindLbs(out lbs, lon, 0);
 
 IHost host = Host.CreateDefaultBuilder(args)
     .ConfigureServices(services =>
