@@ -85,8 +85,8 @@ namespace LbsLibrary
         {
             StringBuilder outLine = new StringBuilder();
             outLine.Append(this.Date).Append(',');
-            outLine.Append(this.Lat.ToString(CultureInfo.InvariantCulture)).Append(',');
             outLine.Append(this.Lon.ToString(CultureInfo.InvariantCulture)).Append(',');
+            outLine.Append(this.Lat.ToString(CultureInfo.InvariantCulture)).Append(',');
             outLine.Append(this.Sat).Append(',');
             outLine.Append(this.LbsRecord.Mcc).Append(',');
             outLine.Append(this.LbsRecord.Net).Append(',');

@@ -1,5 +1,4 @@
 using WorkerService1;
-using LbsLibrary;
 
 //var point = new Point();
 //var line = point.ToString();

@@ -47,12 +47,12 @@ namespace WorkerService1
                 }
                 point.Lon = value;
 
-                if (!double.TryParse(line[0], NumberStyles.Float, CultureInfo.InvariantCulture, out value))
+                if (!double.TryParse(line[1], NumberStyles.Float, CultureInfo.InvariantCulture, out value))
                 {
                     continue;
                 }
                 point.Lat = value;
-                point.Sat = 5;
+                point.Sat = 2;
                 TestPoint.Add(point);
             }
 
