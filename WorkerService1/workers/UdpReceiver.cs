@@ -25,7 +25,7 @@ namespace WorkerService1
                 Console.WriteLine(message);
 
 
-                await Task.Delay(1000, stoppingToken);
+                await Task.Delay(5000, stoppingToken);
             }
         }
     }

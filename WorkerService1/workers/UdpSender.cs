@@ -3,7 +3,6 @@ using System.Net.Sockets;
 using Aspose.Gis.Geometries;
 using Aspose.Gis;
 using System.Text.RegularExpressions;
-using LbsLibrary;
 using System.Globalization;
 
 namespace WorkerService1
@@ -13,7 +12,7 @@ namespace WorkerService1
         private readonly ILogger<UdpSender> _logger;
         private readonly UdpClient _server;
   
-        private readonly VectorLayer layer = Drivers.Gpx.OpenLayer(@"D:\Point.gpx");
+        private readonly VectorLayer layer = Drivers.Gpx.OpenLayer(@"TestPoint\Point.gpx");
 
         public UdpSender(ILogger<UdpSender> logger)
         {
@@ -62,14 +61,13 @@ namespace WorkerService1
             {
                 foreach (var point in TestPoint)
                 {
-                    _logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
                     point.Date = DateTime.Now;
 
                     var message = point.ToString();
                     byte[] data = Encoding.UTF8.GetBytes(message);
 
                     await _server.SendAsync(data, stoppingToken);
-                    await Task.Delay(3000, stoppingToken);
+                    await Task.Delay(5000, stoppingToken);
                 }
 
                 await Task.Delay(1000, stoppingToken);
