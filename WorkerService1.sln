@@ -5,7 +5,9 @@ VisualStudioVersion = 17.0.32126.317
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WorkerService1", "WorkerService1\WorkerService1.csproj", "{C7632656-6B64-44A3-B8E8-F3508B0AFCBF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CsvService", "CsvService\CsvService.csproj", "{ABD24273-52C6-4EE7-B56C-8898B66E61C2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CsvService", "CsvService\CsvService.csproj", "{ABD24273-52C6-4EE7-B56C-8898B66E61C2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LbsService", "LbsService\LbsService.csproj", "{D061BE6B-9C81-4B31-92FE-D64BF6316559}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{ABD24273-52C6-4EE7-B56C-8898B66E61C2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ABD24273-52C6-4EE7-B56C-8898B66E61C2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{ABD24273-52C6-4EE7-B56C-8898B66E61C2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D061BE6B-9C81-4B31-92FE-D64BF6316559}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D061BE6B-9C81-4B31-92FE-D64BF6316559}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D061BE6B-9C81-4B31-92FE-D64BF6316559}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D061BE6B-9C81-4B31-92FE-D64BF6316559}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

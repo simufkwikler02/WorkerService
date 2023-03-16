@@ -11,121 +11,67 @@ namespace WorkerService1
 
         public double Lat { get; set; }
 
-        public int Sat { get; set; } = 0;
+        public int Sat { get; set; }
 
         public LBS LbsRecord { get; set; }
 
-        private readonly char Separator = ',';
-
-        public Point()
-        {
-            this.Date = DateTime.Now;
-            this.Lat = 0.4;
-            this.Lon = 0.5;
-            this.Sat = 4;
-            this.LbsRecord = new LBS();
-        }
-
         public void Parse(string line)
         {
-            var lineSpan = line.AsSpan();
-            var ind = 0;
+            var ind = -1;
+            var indBuf = 0;
 
-            var indBuf = ind;
-            ind = line.IndexOf(Separator, indBuf + 1);
-            if (ind == -1)
+            if (!StringReader.TryNextWord(line, ref ind, ref indBuf))
                 return;
 
-            DateTime time;
-            if (!DateTime.TryParse(lineSpan.Slice(indBuf + 1, ind - indBuf - 1), out time))
-
-            {
-                Console.WriteLine($"line convert error,line skipped");
-                return;
-            }
-
-            if (!TryNextWord(line, ref ind, ref indBuf))
+            if (!StringReader.TryParseToDateTime(line, ref ind, ref indBuf, out DateTime time))
                 return;
 
-            double Lon;
-            if (!double.TryParse(lineSpan.Slice(indBuf + 1, ind - indBuf - 1), NumberStyles.Float, CultureInfo.InvariantCulture, out Lon))
-            {
-                Console.WriteLine($"line convert error,line skipped");
-                return;
-            }
-
-            if (!TryNextWord(line, ref ind, ref indBuf))
+            if (!StringReader.TryNextWord(line, ref ind, ref indBuf))
                 return;
 
-            double Lat;
-            if (!double.TryParse(lineSpan.Slice(indBuf + 1, ind - indBuf - 1), NumberStyles.Float, CultureInfo.InvariantCulture, out Lat))
-            {
-                Console.WriteLine($"line convert error,line skipped");
-                return;
-            }
-
-            if (!TryNextWord(line, ref ind, ref indBuf))
+            if (!StringReader.TryParseToDouble(line, ref ind, ref indBuf, out double Lon))
                 return;
 
-            int Sat;
-            if (!int.TryParse(lineSpan.Slice(indBuf + 1, ind - indBuf - 1), out Sat))
-            {
-                Console.WriteLine($"line convert error,line skipped");
-                return;
-            }
-
-            if (!TryNextWord(line, ref ind, ref indBuf))
+            if (!StringReader.TryNextWord(line, ref ind, ref indBuf))
                 return;
 
-            int Mcc;
-            if (!int.TryParse(lineSpan.Slice(indBuf + 1, ind - indBuf - 1), out Mcc))
-            {
-                Console.WriteLine($"line convert error,line skipped");
-                return;
-            }
-
-
-            if (!TryNextWord(line, ref ind, ref indBuf))
+            if (!StringReader.TryParseToDouble(line, ref ind, ref indBuf, out double Lat))
                 return;
 
-            int Net;
-            if (!int.TryParse(lineSpan.Slice(indBuf + 1, ind - indBuf - 1), out Net))
-            {
-                Console.WriteLine($"line convert error,line skipped");
-                return;
-            }
-
-
-            if (!TryNextWord(line, ref ind, ref indBuf))
+            if (!StringReader.TryNextWord(line, ref ind, ref indBuf))
                 return;
 
-            int Area;
-            if (!int.TryParse(lineSpan.Slice(indBuf + 1, ind - indBuf - 1), out Area))
-            {
-                Console.WriteLine($"line convert error,line skipped");
+            if (!StringReader.TryParseToInt(line, ref ind, ref indBuf, out int Sat))
                 return;
-            }
 
+            if (!StringReader.TryNextWord(line, ref ind, ref indBuf))
+                return;
 
-            if (!TryNextWord(line, ref ind, ref indBuf))
-                ind = -1;
+            if (!StringReader.TryParseToInt(line, ref ind, ref indBuf, out int Mcc))
+                return;
 
+            if (!StringReader.TryNextWord(line, ref ind, ref indBuf))
+                return;
+
+            if (!StringReader.TryParseToInt(line, ref ind, ref indBuf, out int Net))
+                return;
+
+            if (!StringReader.TryNextWord(line, ref ind, ref indBuf))
+                return;
+
+            if (!StringReader.TryParseToInt(line, ref ind, ref indBuf, out int Area))
+                return;
+                
             int Cell;
-            if (ind == -1)
+            if (!StringReader.TryNextWord(line, ref ind, ref indBuf))
             {
-                if (!int.TryParse(lineSpan.Slice(indBuf + 1), out Cell))
-                {
-                    Console.WriteLine($"line convert error,line skipped");
+                if (!StringReader.TryParseLastToInt(line, ref ind, ref indBuf, out Cell))
                     return;
-                }
             }
             else
             {
-                if (!int.TryParse(lineSpan.Slice(indBuf + 1, ind - indBuf - 1), out Cell))
-                {
-                    Console.WriteLine($"line convert error,line skipped");
+                if (!StringReader.TryParseToInt(line, ref ind, ref indBuf, out Cell))
                     return;
-                }
             }
 
             this.Date = time;
@@ -149,15 +95,5 @@ namespace WorkerService1
 
             return outLine.ToString();
         }
-
-        public bool TryNextWord(string line, ref int ind, ref int indBuf)
-        {
-            indBuf = ind;
-            ind = line.IndexOf(Separator, indBuf + 1);
-            if (ind == -1)
-                return false;
-            return true;
-        }
-
     }
 }

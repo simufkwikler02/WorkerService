@@ -5,7 +5,7 @@ namespace WorkerService1
     public class LbsService
     {
         private readonly Dictionary<LBS, (double, double)> keyValuePairs = new();
-        private readonly char Separator = ',';
+
         public void ReadAndSave(string filePath)
         {
             if (!File.Exists(filePath))
@@ -14,99 +14,62 @@ namespace WorkerService1
                 return;
             }
 
-            using (StreamReader reader = new StreamReader(filePath))
+            using StreamReader reader = new(filePath);
+            this.keyValuePairs.Clear();
+            string? line;
+            while ((line = reader.ReadLine()) != null)
             {
-                this.keyValuePairs.Clear();
-                string? line;
-                while ((line = reader.ReadLine()) != null)
-                {
-                    var lineSpan = line.AsSpan();
-                    var ind = -1;
-                    var indBuf = 0;
+                var lineSpan = line.AsSpan();
+                var ind = -1;
+                var indBuf = 0;
 
-                    if (!TryNextWord(line, ref ind, ref indBuf))
-                        return;
+                if (!StringReader.TryNextWord(line, ref ind, ref indBuf))
+                    return;
 
-                    int Mcc;
-                    if (!int.TryParse(lineSpan.Slice(indBuf, ind - indBuf), out Mcc))
-                    {
-                        Console.WriteLine($"line convert error,line skipped");
-                        return;
-                    }
+                if (!StringReader.TryParseToInt(line, ref ind, ref indBuf, out int Mcc))
+                    return;
+                
+                if (!StringReader.TryNextWord(line, ref ind, ref indBuf))
+                    return;
 
+                if (!StringReader.TryParseToInt(line, ref ind, ref indBuf, out int Net))
+                    return;
 
-                    if (!TryNextWord(line, ref ind, ref indBuf))
-                        return;
-
-                    int Net;
-                    if (!int.TryParse(lineSpan.Slice(indBuf + 1, ind - indBuf - 1), out Net))
-                    {
-                        Console.WriteLine($"line convert error,line skipped");
-                        return;
-                    }
-
-
-                    if (!TryNextWord(line, ref ind, ref indBuf))
-                        return;
-
-                    int Area;
-                    if (!int.TryParse(lineSpan.Slice(indBuf + 1, ind - indBuf - 1), out Area))
-                    {
-                        Console.WriteLine($"line convert error,line skipped");
-                        return;
-                    }
-
-
-                    if (!TryNextWord(line, ref ind, ref indBuf))
-                        return;
-
-                    int Cell;
-                    if (!int.TryParse(lineSpan.Slice(indBuf + 1, ind - indBuf - 1), out Cell))
-                    {
-                        Console.WriteLine($"line convert error,line skipped");
-                        return;
-                    }
-
-                    if (!TryNextWord(line, ref ind, ref indBuf))
-                        return;
-
-                    double Lon;
-                    if (!double.TryParse(lineSpan.Slice(indBuf + 1, ind - indBuf - 1), NumberStyles.Float, CultureInfo.InvariantCulture, out Lon))
-                    {
-                        Console.WriteLine($"line convert error,line skipped");
-                        return;
-                    }
-
-
-                    if (!TryNextWord(line, ref ind, ref indBuf))
-                        ind = -1;
-
-                    double Lat;
-                    if (ind == -1)
-                    {
-                        if (!double.TryParse(lineSpan.Slice(indBuf + 1), NumberStyles.Float, CultureInfo.InvariantCulture, out Lat))
-                        {
-                            Console.WriteLine($"line convert error,line skipped");
-                            return;
-                        }
-                    }
-                    else
-                    {
-                        if (!double.TryParse(lineSpan.Slice(indBuf + 1, ind - indBuf - 1), NumberStyles.Float, CultureInfo.InvariantCulture, out Lat))
-                        {
-                            Console.WriteLine($"line convert error,line skipped");
-                            return;
-                        }
-                    }
-
-                    var lbs = new LBS(Mcc, Net, Area, Cell);
-                    this.keyValuePairs.Add(lbs, (Lon, Lat));
-
-
-                }
-
-            }
+                if (!StringReader.TryNextWord(line, ref ind, ref indBuf))
+                    return;
             
+                if (!StringReader.TryParseToInt(line, ref ind, ref indBuf, out int Area))
+                    return;
+
+                if (!StringReader.TryNextWord(line, ref ind, ref indBuf))
+                    return;
+
+                if (!StringReader.TryParseToInt(line, ref ind, ref indBuf, out int Cell))
+                    return;
+
+                if (!StringReader.TryNextWord(line, ref ind, ref indBuf))
+                    return;
+
+                if (!StringReader.TryParseToDouble(line, ref ind, ref indBuf, out double Lon))
+                    return;
+
+                double Lat;
+                if (!StringReader.TryNextWord(line, ref ind, ref indBuf))
+                {
+                    if (!StringReader.TryParseLastToDouble(line, ref ind, ref indBuf, out Lat))
+                        return;
+                }
+                else
+                {
+                    if (!StringReader.TryParseToDouble(line, ref ind, ref indBuf, out Lat))
+                        return;
+                }
+                              
+
+                var lbs = new LBS(Mcc, Net, Area, Cell);
+                this.keyValuePairs.Add(lbs, (Lon, Lat));
+            }
+
         }
       
 
@@ -140,15 +103,5 @@ namespace WorkerService1
 
             return lbs;
         }
-
-        public bool TryNextWord(string line, ref int ind, ref int indBuf)
-        {
-            indBuf = ind;
-            ind = line.IndexOf(Separator, indBuf + 1);
-            if (ind == -1)
-                return false;
-            return true;
-        }
     }
-    
 }

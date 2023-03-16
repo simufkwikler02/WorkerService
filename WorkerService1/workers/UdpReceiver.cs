@@ -20,7 +20,7 @@ namespace WorkerService1
             {
                 _logger.LogInformation("Listener running at: {time}", DateTimeOffset.Now);
 
-                var result = await _server.ReceiveAsync();
+                var result = await _server.ReceiveAsync(stoppingToken);
                 var message = Encoding.UTF8.GetString(result.Buffer);
                 Console.WriteLine(message);
 

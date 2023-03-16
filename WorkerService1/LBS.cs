@@ -11,14 +11,6 @@ namespace WorkerService1
 
         public int Cell { get; set; }
 
-        public LBS()
-        {           
-            this.Mcc = 0;
-            this.Net = 0;
-            this.Area = 0;
-            this.Cell = 0;
-        }
-
         public LBS(int Mcc, int Net, int Area, int Cell)
         {
             this.Mcc = Mcc;
