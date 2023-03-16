@@ -1,6 +1,6 @@
 ﻿using System.Globalization;
 
-namespace WorkerService1
+namespace LbsLibrary
 {
     public class LbsService
     {

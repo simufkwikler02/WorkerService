@@ -1,6 +1,7 @@
 using WorkerService1;
+using LbsLibrary;
 
-var point = new Point(DateTime.Now, 34,23);
+var point = new Point();
 var line = point.ToString();
 point.Parse(line);
 var serviceee = new LbsService();

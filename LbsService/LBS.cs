@@ -1,5 +1,5 @@
 ﻿
-namespace WorkerService1
+namespace LbsLibrary
 {
     public struct LBS
     {

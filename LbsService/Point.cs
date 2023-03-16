@@ -1,7 +1,7 @@
 ﻿using System.Text;
 using System.Globalization;
 
-namespace WorkerService1
+namespace LbsLibrary
 {
     public class Point
     {

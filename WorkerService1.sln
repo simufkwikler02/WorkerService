@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WorkerService1", "WorkerSer
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CsvService", "CsvService\CsvService.csproj", "{ABD24273-52C6-4EE7-B56C-8898B66E61C2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LbsService", "LbsService\LbsService.csproj", "{D061BE6B-9C81-4B31-92FE-D64BF6316559}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LbsLibrary", "LbsService\LbsLibrary.csproj", "{D061BE6B-9C81-4B31-92FE-D64BF6316559}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
