@@ -4,36 +4,39 @@ using Aspose.Gis.Geometries;
 using Aspose.Gis;
 using System.Text.RegularExpressions;
 using System.Globalization;
+using LbsLibrary;
 
 namespace WorkerService1
 {
     public class UdpSender : BackgroundService
     {
         private readonly ILogger<UdpSender> _logger;
-        private readonly UdpClient _server;
-  
+        private readonly LbsService _lbsService;
+
         private readonly VectorLayer layer = Drivers.Gpx.OpenLayer(@"TestPoint\Point.gpx");
 
-        public UdpSender(ILogger<UdpSender> logger)
+        public UdpSender(ILogger<UdpSender> logger, LbsService service)
         {
             _logger = logger;
-            _server = new UdpClient("127.0.0.1", 22220);
+            _lbsService = service;
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
+            var server = new UdpClient("127.0.0.1", 22220);
+            _lbsService.ReadAndSave("D:\\out_257.csv");
             string s = string.Empty;
             foreach (var feature in this.layer)
             {
-                // Ïðîâåðêà ãåîìåòðèè MultiLineString
                 if (feature.Geometry.GeometryType == GeometryType.MultiLineString)
                 {
-                    // ×èòàòü òðåê
                     var lines = (MultiLineString)feature.Geometry;                   
                     s = lines.AsText();
                     
                 }
             }
+
+            // 53.383240 26.538230 179.3
             var regex = new Regex(@"-?\d+(.)\d+ -?\d+(.)\d+ -?\d+(.)\d+");
             MatchCollection matches = regex.Matches(s);
             var TestPoint = new List<LbsLibrary.Point>();
@@ -41,18 +44,21 @@ namespace WorkerService1
             {
                 var line = match.Value.Split(' ');
                 var point = new LbsLibrary.Point();
-                if(!double.TryParse(line[0], NumberStyles.Float, CultureInfo.InvariantCulture, out double value))
-                {
-                    continue;
-                }
-                point.Lon = value;
 
-                if (!double.TryParse(line[1], NumberStyles.Float, CultureInfo.InvariantCulture, out value))
+                if(!double.TryParse(line[0], NumberStyles.Float, CultureInfo.InvariantCulture, out double lon))
                 {
                     continue;
                 }
-                point.Lat = value;
+
+                if (!double.TryParse(line[1], NumberStyles.Float, CultureInfo.InvariantCulture, out double lat))
+                {
+                    continue;
+                }
+
+                point.ÑoordinatesRecord = new Ñoordinates() { Latitude = lat, Longitude = lon }; 
                 point.Sat = 2;
+                point.LbsRecord = _lbsService.FindLbs(point.ÑoordinatesRecord);
+
                 TestPoint.Add(point);
             }
 
@@ -66,8 +72,8 @@ namespace WorkerService1
                     var message = point.ToString();
                     byte[] data = Encoding.UTF8.GetBytes(message);
 
-                    await _server.SendAsync(data, stoppingToken);
-                    await Task.Delay(5000, stoppingToken);
+                    await server.SendAsync(data, stoppingToken);
+                    await Task.Delay(1000, stoppingToken);
                 }
 
                 await Task.Delay(1000, stoppingToken);

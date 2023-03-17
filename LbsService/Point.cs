@@ -7,86 +7,38 @@ namespace LbsLibrary
     {
         public DateTime Date { get; set; }
 
-        public double Lon { get; set; }
-
-        public double Lat { get; set; }
+        public Сoordinates СoordinatesRecord { get; set; }
 
         public int Sat { get; set; }
 
         public LBS LbsRecord { get; set; }
 
-        public void Parse(string line)
+        public static Point? Parse(string line)
         {
             var ind = -1;
             var indBuf = 0;
+            if (!StringReader.TryParseToDateTime(line, ref ind, ref indBuf, out DateTime time) ||
+                !StringReader.TryParseToDouble(line, ref ind, ref indBuf, out double Lon) ||
+                !StringReader.TryParseToDouble(line, ref ind, ref indBuf, out double Lat) ||
+                !StringReader.TryParseToInt(line, ref ind, ref indBuf, out int Sat) ||
+                !StringReader.TryParseToInt(line, ref ind, ref indBuf, out int Mcc) ||
+                !StringReader.TryParseToInt(line, ref ind, ref indBuf, out int Net) ||
+                !StringReader.TryParseToInt(line, ref ind, ref indBuf, out int Area) ||
+                !StringReader.TryParseLastToInt(line, ref ind, ref indBuf, out int Cell))
+                return null;
 
-            if (!StringReader.TryNextWord(line, ref ind, ref indBuf))
-                return;
+            var lbs = new LBS { Mcc = Mcc, Net = Net, Area = Area, Cell = Cell };
+            var lonLat = new Сoordinates() { Longitude = Lon, Latitude = Lat };
 
-            if (!StringReader.TryParseToDateTime(line, ref ind, ref indBuf, out DateTime time))
-                return;
-
-            if (!StringReader.TryNextWord(line, ref ind, ref indBuf))
-                return;
-
-            if (!StringReader.TryParseToDouble(line, ref ind, ref indBuf, out double Lon))
-                return;
-
-            if (!StringReader.TryNextWord(line, ref ind, ref indBuf))
-                return;
-
-            if (!StringReader.TryParseToDouble(line, ref ind, ref indBuf, out double Lat))
-                return;
-
-            if (!StringReader.TryNextWord(line, ref ind, ref indBuf))
-                return;
-
-            if (!StringReader.TryParseToInt(line, ref ind, ref indBuf, out int Sat))
-                return;
-
-            if (!StringReader.TryNextWord(line, ref ind, ref indBuf))
-                return;
-
-            if (!StringReader.TryParseToInt(line, ref ind, ref indBuf, out int Mcc))
-                return;
-
-            if (!StringReader.TryNextWord(line, ref ind, ref indBuf))
-                return;
-
-            if (!StringReader.TryParseToInt(line, ref ind, ref indBuf, out int Net))
-                return;
-
-            if (!StringReader.TryNextWord(line, ref ind, ref indBuf))
-                return;
-
-            if (!StringReader.TryParseToInt(line, ref ind, ref indBuf, out int Area))
-                return;
-                
-            int Cell;
-            if (!StringReader.TryNextWord(line, ref ind, ref indBuf))
-            {
-                if (!StringReader.TryParseLastToInt(line, ref ind, ref indBuf, out Cell))
-                    return;
-            }
-            else
-            {
-                if (!StringReader.TryParseToInt(line, ref ind, ref indBuf, out Cell))
-                    return;
-            }
-
-            this.Date = time;
-            this.Lon = Lon;
-            this.Lat = Lat;
-            this.Sat = Sat;
-            this.LbsRecord = new LBS(Mcc, Net, Area, Cell);
+            return new Point() { Date = time, СoordinatesRecord = lonLat, Sat = Sat, LbsRecord = lbs };
         }
 
         public override string ToString()
         {
             StringBuilder outLine = new StringBuilder();
             outLine.Append(this.Date).Append(',');
-            outLine.Append(this.Lon.ToString(CultureInfo.InvariantCulture)).Append(',');
-            outLine.Append(this.Lat.ToString(CultureInfo.InvariantCulture)).Append(',');
+            outLine.Append(this.СoordinatesRecord.Longitude.ToString(CultureInfo.InvariantCulture)).Append(',');
+            outLine.Append(this.СoordinatesRecord.Latitude.ToString(CultureInfo.InvariantCulture)).Append(',');
             outLine.Append(this.Sat).Append(',');
             outLine.Append(this.LbsRecord.Mcc).Append(',');
             outLine.Append(this.LbsRecord.Net).Append(',');

@@ -10,13 +10,5 @@ namespace LbsLibrary
         public int Area { get; set; }
 
         public int Cell { get; set; }
-
-        public LBS(int Mcc, int Net, int Area, int Cell)
-        {
-            this.Mcc = Mcc;
-            this.Net = Net;
-            this.Area = Area;
-            this.Cell = Cell;
-        }
     }
 }

@@ -44,7 +44,7 @@ namespace ConsoleApp_work
             var ind = -1;
             var lineSpan = line.AsSpan();
 
-            if (!TryNextWord(line, ref ind, ref indBuf))
+            if (!SkipWords(line, ref ind, ref indBuf))
                 return;
 
             var firstLine = lineSpan.Slice(0, ind);
@@ -56,7 +56,7 @@ namespace ConsoleApp_work
                 return;
 
             
-            if (!TryNextWord(line, ref ind, ref indBuf))
+            if (!SkipWords(line, ref ind, ref indBuf))
                 return;
 
             ushort Mcc;
@@ -67,7 +67,7 @@ namespace ConsoleApp_work
             }
 
 
-            if (!TryNextWord(line, ref ind, ref indBuf))
+            if (!SkipWords(line, ref ind, ref indBuf))
                 return;
 
             byte Net;
@@ -78,7 +78,7 @@ namespace ConsoleApp_work
             }
 
 
-            if (!TryNextWord(line, ref ind, ref indBuf))
+            if (!SkipWords(line, ref ind, ref indBuf))
                 return;
 
             ushort Area;
@@ -89,7 +89,7 @@ namespace ConsoleApp_work
             }
 
 
-            if (!TryNextWord(line, ref ind, ref indBuf))
+            if (!SkipWords(line, ref ind, ref indBuf))
                 return;
 
             uint Cell;
@@ -99,10 +99,10 @@ namespace ConsoleApp_work
                 return;
             }
 
-            if (!TryNextWord(line, ref ind, ref indBuf))
+            if (!SkipWords(line, ref ind, ref indBuf))
                 return;
 
-            if (!TryNextWord(line, ref ind, ref indBuf))
+            if (!SkipWords(line, ref ind, ref indBuf))
                 return;
 
             double Lon;
@@ -112,7 +112,7 @@ namespace ConsoleApp_work
                 return;
             }
 
-            if (!TryNextWord(line, ref ind, ref indBuf))
+            if (!SkipWords(line, ref ind, ref indBuf))
                 return;
 
             double Lat;
@@ -131,7 +131,7 @@ namespace ConsoleApp_work
             outLine.Append(Lat.ToString(CultureInfo.InvariantCulture)).AppendLine();
         }
 
-        public bool TryNextWord(string line, ref int ind, ref int indBuf)
+        public bool SkipWords(string line, ref int ind, ref int indBuf)
         {
             indBuf = ind;
             ind = line.IndexOf(Separator, indBuf + 1);

@@ -1,4 +1,5 @@
 using WorkerService1;
+using LbsLibrary;
 
 //var point = new Point();
 //var line = point.ToString();
@@ -18,6 +19,7 @@ IHost host = Host.CreateDefaultBuilder(args)
     {
         services.AddHostedService<UdpSender>();
         services.AddHostedService<UdpReceiver>();
+        services.AddSingleton<LbsService>();
     })
     .Build();
 
