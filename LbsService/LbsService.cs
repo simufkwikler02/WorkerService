@@ -35,8 +35,7 @@ namespace LbsLibrary
                 this.keyValuePairs.Add(lbs, Сoordinates);
             }
 
-        }
-      
+        }      
 
         public bool TryGetLatLng(LBS Lbs, out Сoordinates Сoordinates)
         {
@@ -45,6 +44,7 @@ namespace LbsLibrary
                 Сoordinates = new Сoordinates { Latitude = default, Longitude = default};
                 return false;
             }
+
             Сoordinates = value;
             return true;
         }
