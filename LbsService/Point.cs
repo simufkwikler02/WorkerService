@@ -28,14 +28,14 @@ namespace LbsLibrary
                 return null;
 
             var lbs = new LBS { Mcc = Mcc, Net = Net, Area = Area, Cell = Cell };
-            var lonLat = new Сoordinates() { Longitude = Lon, Latitude = Lat };
+            var Сoordinates = new Сoordinates() { Longitude = Lon, Latitude = Lat };
 
-            return new Point() { Date = time, СoordinatesRecord = lonLat, Sat = Sat, LbsRecord = lbs };
+            return new Point() { Date = time, СoordinatesRecord = Сoordinates, Sat = Sat, LbsRecord = lbs };
         }
 
         public override string ToString()
         {
-            StringBuilder outLine = new StringBuilder();
+            StringBuilder outLine = new();
             outLine.Append(this.Date).Append(',');
             outLine.Append(this.СoordinatesRecord.Longitude.ToString(CultureInfo.InvariantCulture)).Append(',');
             outLine.Append(this.СoordinatesRecord.Latitude.ToString(CultureInfo.InvariantCulture)).Append(',');

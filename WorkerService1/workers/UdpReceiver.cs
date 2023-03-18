@@ -22,7 +22,7 @@ namespace WorkerService1
 
             while (!stoppingToken.IsCancellationRequested)
             {
-                //_logger.LogInformation("Listener running at: {time}", DateTimeOffset.Now);
+                _logger.LogInformation("UdpReceiver running at: {time}", DateTimeOffset.Now);
 
                 var result = await server.ReceiveAsync(stoppingToken);
                 var message = Encoding.UTF8.GetString(result.Buffer);
@@ -33,7 +33,7 @@ namespace WorkerService1
                 {
                     continue;
                 }
-                ParesePoint(point, _lbsService);
+                ParesePoint(point);
                 Console.WriteLine(point.ToString() + "(Parsed)");
                 
 
@@ -42,13 +42,13 @@ namespace WorkerService1
             }
         }
 
-        private void ParesePoint(Point point, LbsService  service)
+        private void ParesePoint(Point point)
         {
             if (point.Sat < 3)
             {
-                if(service.TryGetLatLng(point.LbsRecord, out Сoordinates lonlat))
+                if(this._lbsService.TryGetLatLng(point.LbsRecord, out Сoordinates Сoordinates))
                 {
-                    point.СoordinatesRecord = lonlat;
+                    point.СoordinatesRecord = Сoordinates;
                     point.Sat = 0;
                 }
             }

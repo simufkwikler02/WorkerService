@@ -39,7 +39,8 @@ namespace WorkerService1
             // 53.383240 26.538230 179.3
             var regex = new Regex(@"-?\d+(.)\d+ -?\d+(.)\d+ -?\d+(.)\d+");
             MatchCollection matches = regex.Matches(s);
-            var TestPoint = new List<LbsLibrary.Point>();
+            var testPoint = new List<LbsLibrary.Point>();
+            var rand = new Random();
             foreach (Match match in matches)
             {
                 var line = match.Value.Split(' ');
@@ -56,17 +57,19 @@ namespace WorkerService1
                 }
 
                 point.ÑoordinatesRecord = new Ñoordinates() { Latitude = lat, Longitude = lon }; 
-                point.Sat = 2;
+
+                point.Sat = rand.Next(1,8);
                 point.LbsRecord = _lbsService.FindLbs(point.ÑoordinatesRecord);
 
-                TestPoint.Add(point);
+                testPoint.Add(point);
             }
 
 
             while (!stoppingToken.IsCancellationRequested)
             {
-                foreach (var point in TestPoint)
+                foreach (var point in testPoint)
                 {
+                    _logger.LogInformation("UdpSender running at: {time}", DateTimeOffset.Now);
                     point.Date = DateTime.Now;
 
                     var message = point.ToString();

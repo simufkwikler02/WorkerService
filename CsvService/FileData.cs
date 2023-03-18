@@ -6,8 +6,7 @@ namespace ConsoleApp_work
 {
     public class FileData
     {
-        private char Separator = ',';
-        private string fileName = "out_257.csv";
+        private readonly string fileName = "out_257.csv";
 
 
         public async Task DownloadAndSaveCsv(string uri, string pathWrite)
@@ -42,102 +41,29 @@ namespace ConsoleApp_work
             outLine.Clear();
             var indBuf = 0;
             var ind = -1;
-            var lineSpan = line.AsSpan();
 
-            if (!SkipWords(line, ref ind, ref indBuf))
+            if (!LbsLibrary.StringReader.SkipWords(line, ref ind, ref indBuf))
                 return;
 
-            var firstLine = lineSpan.Slice(0, ind);
+            var firstWord = line.AsSpan()[..ind];
 
-            if (firstLine.Length != 3)
+            if (firstWord.Length != 3 ||
+                !(firstWord[0] == 'G' && firstWord[1] == 'S' && firstWord[2] == 'M') ||
+                !LbsLibrary.StringReader.TryParseToInt(line, ref ind, ref indBuf, out int Mcc) ||
+                !LbsLibrary.StringReader.TryParseToInt(line, ref ind, ref indBuf, out int Net) ||
+                !LbsLibrary.StringReader.TryParseToInt(line, ref ind, ref indBuf, out int Area) ||
+                !LbsLibrary.StringReader.TryParseToInt(line, ref ind, ref indBuf, out int Cell) ||
+                !LbsLibrary.StringReader.SkipWords(line, ref ind, ref indBuf) ||
+                !LbsLibrary.StringReader.TryParseToDouble(line, ref ind, ref indBuf, out double Lon) ||
+                !LbsLibrary.StringReader.TryParseToDouble(line, ref ind, ref indBuf, out double Lat))
                 return;
-
-            if (!(firstLine[0] == 'G' && firstLine[1] == 'S' && firstLine[2] == 'M'))
-                return;
-
             
-            if (!SkipWords(line, ref ind, ref indBuf))
-                return;
-
-            ushort Mcc;
-            if (!ushort.TryParse(lineSpan.Slice(indBuf + 1, ind - indBuf - 1), out Mcc))
-            {
-                Console.WriteLine($"line convert error,line skipped");
-                return;
-            }
-
-
-            if (!SkipWords(line, ref ind, ref indBuf))
-                return;
-
-            byte Net;
-            if (!byte.TryParse(lineSpan.Slice(indBuf + 1, ind - indBuf - 1), out Net))
-            {
-                Console.WriteLine($"line convert error,line skipped");
-                return;
-            }
-
-
-            if (!SkipWords(line, ref ind, ref indBuf))
-                return;
-
-            ushort Area;
-            if (!ushort.TryParse(lineSpan.Slice(indBuf + 1, ind - indBuf - 1), out Area))
-            {
-                Console.WriteLine($"line convert error,line skipped");
-                return;
-            }
-
-
-            if (!SkipWords(line, ref ind, ref indBuf))
-                return;
-
-            uint Cell;
-            if (!uint.TryParse(lineSpan.Slice(indBuf + 1, ind - indBuf - 1), out Cell))
-            {
-                Console.WriteLine($"line convert error,line skipped");
-                return;
-            }
-
-            if (!SkipWords(line, ref ind, ref indBuf))
-                return;
-
-            if (!SkipWords(line, ref ind, ref indBuf))
-                return;
-
-            double Lon;
-            if (!double.TryParse(lineSpan.Slice(indBuf + 1, ind - indBuf - 1), NumberStyles.Float, CultureInfo.InvariantCulture, out Lon))
-            {
-                Console.WriteLine($"line convert error,line skipped");
-                return;
-            }
-
-            if (!SkipWords(line, ref ind, ref indBuf))
-                return;
-
-            double Lat;
-            if (!double.TryParse(lineSpan.Slice(indBuf + 1, ind - indBuf - 1), NumberStyles.Float, CultureInfo.InvariantCulture, out Lat))
-            {
-                Console.WriteLine($"line convert error,line skipped");
-                return;
-            }
-
-
             outLine.Append(Mcc).Append(',');
             outLine.Append(Net).Append(',');
             outLine.Append(Area).Append(',');
             outLine.Append(Cell).Append(',');
             outLine.Append(Lon.ToString(CultureInfo.InvariantCulture)).Append(',');
             outLine.Append(Lat.ToString(CultureInfo.InvariantCulture)).AppendLine();
-        }
-
-        public bool SkipWords(string line, ref int ind, ref int indBuf)
-        {
-            indBuf = ind;
-            ind = line.IndexOf(Separator, indBuf + 1);
-            if (ind == -1)
-                return false;
-            return true;
         }
     }
 }

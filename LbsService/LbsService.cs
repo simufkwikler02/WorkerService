@@ -19,7 +19,6 @@ namespace LbsLibrary
             string? line;
             while ((line = reader.ReadLine()) != null)
             {
-                var lineSpan = line.AsSpan();
                 var ind = -1;
                 var indBuf = 0;
 
@@ -53,7 +52,7 @@ namespace LbsLibrary
         public LBS FindLbs(Сoordinates Сoordinates)
         {
             double minLength = double.MaxValue;
-            LBS lbs = new LBS();
+            LBS lbs = new();
 
             foreach (var item in this.keyValuePairs)
             {
