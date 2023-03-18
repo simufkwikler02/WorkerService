@@ -18,7 +18,6 @@ namespace WorkerService1
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             var server = new UdpClient(22220);
-            _lbsService.ReadAndSave("D:\\out_257.csv");
 
             while (!stoppingToken.IsCancellationRequested)
             {
