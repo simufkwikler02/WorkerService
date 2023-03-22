@@ -56,7 +56,7 @@ namespace WorkerService1
                     continue;
                 }
 
-                point.ÑoordinatesRecord = new Ñoordinates() { Latitude = lat, Longitude = lon }; 
+                point.ÑoordinatesRecord = new Ñoordinates() { Lat = lat, Lon = lon }; 
 
                 point.Sat = rand.Next(1,8);
                 point.LbsRecord = _lbsService.FindLbs(point.ÑoordinatesRecord);

@@ -4,7 +4,7 @@ namespace LbsLibrary
 {
     public static class StringReader
     {
-        private readonly static char Separator = ',';
+        private const char Separator = ',';
         public static bool SkipWords(string line, ref int ind, ref int indBuf)
         {
             indBuf = ind;
@@ -18,14 +18,19 @@ namespace LbsLibrary
         {
             if (!StringReader.SkipWords(line, ref ind, ref indBuf))
             {
-                value = default;
-                return false;
+                if (!int.TryParse(line.AsSpan()[(indBuf + 1)..], out value))
+                {
+                    Console.WriteLine($"line convert error,line skipped");
+                    return false;
+                }
             }
-
-            if (!int.TryParse(line.AsSpan().Slice(indBuf + 1, ind - indBuf - 1), out value))
+            else
             {
-                Console.WriteLine($"line convert error,line skipped");
-                return false;
+                if (!int.TryParse(line.AsSpan().Slice(indBuf + 1, ind - indBuf - 1), out value))
+                {
+                    Console.WriteLine($"line convert error,line skipped");
+                    return false;
+                }
             }
 
             return true;
@@ -35,48 +40,19 @@ namespace LbsLibrary
         {
             if (!StringReader.SkipWords(line, ref ind, ref indBuf))
             {
-                value = default;
-                return false;
+                if (!double.TryParse(line.AsSpan()[(indBuf + 1)..], NumberStyles.Float, CultureInfo.InvariantCulture, out value))
+                {
+                    Console.WriteLine($"line convert error,line skipped");
+                    return false;
+                }
             }
-
-            if (!double.TryParse(line.AsSpan().Slice(indBuf + 1, ind - indBuf - 1), NumberStyles.Float, CultureInfo.InvariantCulture, out value))
+            else
             {
-                Console.WriteLine($"line convert error,line skipped");
-                return false;
-            }
-
-            return true;
-        }
-
-        public static bool TryParseLastToInt(string line, ref int ind, ref int indBuf, out int value)
-        {
-            if (StringReader.SkipWords(line, ref ind, ref indBuf))
-            {
-                value = default;
-                return false;
-            }
-
-            if (!int.TryParse(line.AsSpan()[(indBuf + 1)..], out value))
-            {
-                Console.WriteLine($"line convert error,line skipped");
-                return false;
-            }
-
-            return true;
-        }
-
-        public static bool TryParseLastToDouble(string line, ref int ind, ref int indBuf, out double value)
-        {
-            if (StringReader.SkipWords(line, ref ind, ref indBuf))
-            {
-                value = default;
-                return false;
-            }
-
-            if (!double.TryParse(line.AsSpan()[(indBuf + 1)..], NumberStyles.Float, CultureInfo.InvariantCulture, out value))
-            {
-                Console.WriteLine($"line convert error,line skipped");
-                return false;
+                if (!double.TryParse(line.AsSpan().Slice(indBuf + 1, ind - indBuf - 1), NumberStyles.Float, CultureInfo.InvariantCulture, out value))
+                {
+                    Console.WriteLine($"line convert error,line skipped");
+                    return false;
+                }
             }
 
             return true;

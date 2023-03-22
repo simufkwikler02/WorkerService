@@ -4,8 +4,8 @@ namespace LbsLibrary
 {
     public struct Сoordinates
     {
-        public double Longitude { get; set; }
+        public double Lon { get; set; }
 
-        public double Latitude { get; set; }
+        public double Lat { get; set; }
     }
 }

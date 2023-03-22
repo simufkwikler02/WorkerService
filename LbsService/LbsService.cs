@@ -4,7 +4,7 @@ namespace LbsLibrary
 {
     public class LbsService
     {
-        private readonly Dictionary<LBS, Сoordinates> keyValuePairs = new();
+        private readonly Dictionary<LBS, CellTower> _cellTowerDictionary = new();
 
         public void ReadAndSave(string filePath)
         {
@@ -15,7 +15,7 @@ namespace LbsLibrary
             }
 
             using StreamReader reader = new(filePath);
-            this.keyValuePairs.Clear();
+            this._cellTowerDictionary.Clear();
             string? line;
             while ((line = reader.ReadLine()) != null)
             {
@@ -27,41 +27,41 @@ namespace LbsLibrary
                     !StringReader.TryParseToInt(line, ref ind, ref indBuf, out int Area) ||
                     !StringReader.TryParseToInt(line, ref ind, ref indBuf, out int Cell) ||
                     !StringReader.TryParseToDouble(line, ref ind, ref indBuf, out double Lon) ||
-                    !StringReader.TryParseLastToDouble(line, ref ind, ref indBuf, out double Lat))
+                    !StringReader.TryParseToDouble(line, ref ind, ref indBuf, out double Lat))
                     return;
 
-                var lbs = new LBS { Mcc = Mcc, Net = Net, Area = Area, Cell = Cell};
-                var Сoordinates = new Сoordinates { Latitude = Lat , Longitude = Lon};
-                this.keyValuePairs.Add(lbs, Сoordinates);
+                var lbs = new LBS { Mcc = Mcc, Net = Net, Area = Area, Cell = Cell };
+                var lonLat = new Сoordinates { Lat = Lat, Lon = Lon };
+                var cellTower = new CellTower { Lbs = lbs, LonLat = lonLat };
+                this._cellTowerDictionary.Add(lbs, cellTower);
             }
 
         }      
 
-        public bool TryGetLatLng(LBS Lbs, out Сoordinates Сoordinates)
+        public bool TryGetLatLng(LBS lbs, out Сoordinates coordinates)
         {
-            if(!this.keyValuePairs.TryGetValue(Lbs, out Сoordinates value))
+            if(!this._cellTowerDictionary.TryGetValue(lbs, out CellTower tower))
             {
-                Сoordinates = new Сoordinates { Latitude = default, Longitude = default};
+                coordinates = new Сoordinates { Lat = default, Lon = default};
                 return false;
             }
 
-            Сoordinates = value;
+            coordinates = tower.LonLat;
             return true;
         }
 
-        public LBS FindLbs(Сoordinates Сoordinates)
+        public LBS FindLbs(Сoordinates coordinates)
         {
-            double minLength = double.MaxValue;
+            var minLength = double.MaxValue;
             LBS lbs = new();
 
-            foreach (var item in this.keyValuePairs)
+            foreach (var item in this._cellTowerDictionary)
             {
-                double lenght = Math.Pow(Math.Abs(Сoordinates.Longitude - item.Value.Longitude), 2) + Math.Pow(Math.Abs(Сoordinates.Latitude - item.Value.Latitude), 2);
-                if (lenght < minLength)
-                {
-                    minLength = lenght;
-                    lbs = item.Key;
-                }
+                var length = Math.Pow(coordinates.Lon - item.Value.LonLat.Lon, 2)
+                                 + Math.Pow(coordinates.Lat - item.Value.LonLat.Lat, 2);
+                if (!(length < minLength)) continue;
+                minLength = length;
+                lbs = item.Key;
             }
 
             return lbs;

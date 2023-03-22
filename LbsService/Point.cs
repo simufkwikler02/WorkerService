@@ -24,11 +24,11 @@ namespace LbsLibrary
                 !StringReader.TryParseToInt(line, ref ind, ref indBuf, out int Mcc) ||
                 !StringReader.TryParseToInt(line, ref ind, ref indBuf, out int Net) ||
                 !StringReader.TryParseToInt(line, ref ind, ref indBuf, out int Area) ||
-                !StringReader.TryParseLastToInt(line, ref ind, ref indBuf, out int Cell))
+                !StringReader.TryParseToInt(line, ref ind, ref indBuf, out int Cell))
                 return null;
 
             var lbs = new LBS { Mcc = Mcc, Net = Net, Area = Area, Cell = Cell };
-            var Сoordinates = new Сoordinates() { Longitude = Lon, Latitude = Lat };
+            var Сoordinates = new Сoordinates() { Lon = Lon, Lat = Lat };
 
             return new Point() { Date = time, СoordinatesRecord = Сoordinates, Sat = Sat, LbsRecord = lbs };
         }
@@ -37,8 +37,8 @@ namespace LbsLibrary
         {
             StringBuilder outLine = new();
             outLine.Append(this.Date).Append(',');
-            outLine.Append(this.СoordinatesRecord.Longitude.ToString(CultureInfo.InvariantCulture)).Append(',');
-            outLine.Append(this.СoordinatesRecord.Latitude.ToString(CultureInfo.InvariantCulture)).Append(',');
+            outLine.Append(this.СoordinatesRecord.Lon.ToString(CultureInfo.InvariantCulture)).Append(',');
+            outLine.Append(this.СoordinatesRecord.Lat.ToString(CultureInfo.InvariantCulture)).Append(',');
             outLine.Append(this.Sat).Append(',');
             outLine.Append(this.LbsRecord.Mcc).Append(',');
             outLine.Append(this.LbsRecord.Net).Append(',');

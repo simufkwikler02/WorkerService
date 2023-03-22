@@ -8,7 +8,7 @@ namespace WorkerService1
     {
         private readonly ILogger<UdpReceiver> _logger;
         private readonly LbsService _lbsService;
-        private readonly string path_save = "ResultPoint\\outPoint.csv";
+        private const string PathSave = "ResultPoint\\outPoint.csv";
 
         public UdpReceiver(ILogger<UdpReceiver> logger, LbsService service)
         {
@@ -19,7 +19,7 @@ namespace WorkerService1
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             var server = new UdpClient(22220);
-            using var writer = File.CreateText(path_save); 
+            await using var writer = File.CreateText(PathSave); 
 
             while (!stoppingToken.IsCancellationRequested)
             {
