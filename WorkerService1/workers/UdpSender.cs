@@ -10,14 +10,12 @@ namespace WorkerService1
 {
     public class UdpSender : BackgroundService
     {
-        private readonly ILogger<UdpSender> _logger;
         private readonly LbsService _lbsService;
 
-        private readonly VectorLayer layer = Drivers.Gpx.OpenLayer(@"TestPoint\Point.gpx");
+        private readonly VectorLayer _layer = Drivers.Gpx.OpenLayer(@"TestPoint\Point.gpx");
 
-        public UdpSender(ILogger<UdpSender> logger, LbsService service)
+        public UdpSender(LbsService service)
         {
-            _logger = logger;
             _lbsService = service;
         }
 
@@ -25,8 +23,8 @@ namespace WorkerService1
         {
             var server = new UdpClient("127.0.0.1", 22220);
             _lbsService.ReadAndSave("D:\\out_257.csv");
-            string s = string.Empty;
-            foreach (var feature in this.layer)
+            var s = string.Empty;
+            foreach (var feature in this._layer)
             {
                 if (feature.Geometry.GeometryType == GeometryType.MultiLineString)
                 {
@@ -38,7 +36,7 @@ namespace WorkerService1
 
             // 53.383240 26.538230 179.3
             var regex = new Regex(@"-?\d+(.)\d+ -?\d+(.)\d+ -?\d+(.)\d+");
-            MatchCollection matches = regex.Matches(s);
+            var matches = regex.Matches(s);
             var testPoint = new List<LbsLibrary.Point>();
             var rand = new Random();
             foreach (Match match in matches)
@@ -69,11 +67,10 @@ namespace WorkerService1
             {
                 foreach (var point in testPoint)
                 {
-                    _logger.LogInformation("UdpSender running at: {time}", DateTimeOffset.Now);
                     point.Date = DateTime.Now;
 
                     var message = point.ToString();
-                    byte[] data = Encoding.UTF8.GetBytes(message);
+                    var data = Encoding.UTF8.GetBytes(message);
 
                     await server.SendAsync(data, stoppingToken);
                     await Task.Delay(1000, stoppingToken);

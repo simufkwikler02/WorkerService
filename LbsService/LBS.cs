@@ -1,7 +1,7 @@
 ﻿
 namespace LbsLibrary
 {
-    public struct LBS
+    public struct Lbs
     {
         public int Mcc { get; set; }
 
