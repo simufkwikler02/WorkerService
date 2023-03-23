@@ -5,7 +5,7 @@ namespace CsvService
 {
     public class FileData
     {
-        private readonly string _fileName = "out_257.csv";
+        private const string FileName = "out_257.csv";
 
 
         public async Task DownloadAndSaveCsv(string uri, string pathWrite)
@@ -21,8 +21,8 @@ namespace CsvService
                 return;
             }
 
-            var pathSave = pathWrite + this._fileName;
-            using var writer = File.CreateText(pathSave);
+            var pathSave = pathWrite + FileName;
+            await using var writer = File.CreateText(pathSave);
             string? line;
             var resultLine = new StringBuilder();
 

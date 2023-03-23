@@ -1,20 +1,23 @@
-﻿using System.Globalization;
-
-namespace LbsLibrary
+﻿namespace LbsLibrary
 {
     public class LbsService
     {
-        private readonly Dictionary<Lbs, CellTower> _cellTowerDictionary = new();
+        //private readonly Dictionary<Lbs, CellTower> _cellTowerDictionary = new();
+        private const string FilePath = "D:\\out_257.csv";
 
-        public void ReadAndSave(string filePath)
+        private readonly Lazy<Dictionary<Lbs, CellTower>> _cellTowerDictionary = new(ReadAndSave());
+
+        public static Dictionary<Lbs, CellTower> ReadAndSave()
         {
-            if (!File.Exists(filePath))
+            var cellTowerDictionary = new Dictionary<Lbs, CellTower>();
+
+            if (!File.Exists(FilePath))
             {
                 throw new FileNotFoundException("File is not exist");
             }
 
-            using StreamReader reader = new(filePath);
-            this._cellTowerDictionary.Clear();
+            using StreamReader reader = new(FilePath);
+
             while (reader.ReadLine() is { } line)
             {
                 var ind = -1;
@@ -31,14 +34,15 @@ namespace LbsLibrary
                 var lbs = new Lbs { Mcc = mcc, Net = net, Area = area, Cell = cell };
                 var lonLat = new Сoordinates { Lat = lat, Lon = lon };
                 var cellTower = new CellTower { Lbs = lbs, LonLat = lonLat };
-                this._cellTowerDictionary.Add(lbs, cellTower);
+                cellTowerDictionary.Add(lbs, cellTower);
             }
 
+            return cellTowerDictionary;
         }      
 
         public bool TryGetLatLng(Lbs lbs, out Сoordinates coordinates)
         {
-            if(!this._cellTowerDictionary.TryGetValue(lbs, out CellTower tower))
+            if(!this._cellTowerDictionary.Value.TryGetValue(lbs, out CellTower tower))
             {
                 coordinates = new Сoordinates { Lat = default, Lon = default};
                 return false;
@@ -53,7 +57,7 @@ namespace LbsLibrary
             var minLength = double.MaxValue;
             Lbs lbs = new();
 
-            foreach (var item in this._cellTowerDictionary)
+            foreach (var item in this._cellTowerDictionary.Value)
             {
                 var length = Math.Pow(coordinates.Lon - item.Value.LonLat.Lon, 2) 
                            + Math.Pow(coordinates.Lat - item.Value.LonLat.Lat, 2);

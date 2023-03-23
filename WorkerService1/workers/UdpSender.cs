@@ -22,7 +22,6 @@ namespace WorkerService1.Workers
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             using var server = new UdpClient("127.0.0.1", 22220);
-            _lbsService.ReadAndSave("D:\\out_257.csv");
             var s = string.Empty;
             foreach (var feature in this._layer)
             {
@@ -63,7 +62,9 @@ namespace WorkerService1.Workers
             while (!stoppingToken.IsCancellationRequested)
             {
                 var sat = 7;
+                Console.WriteLine("=======================================================");
                 Console.WriteLine($"START SEND SAT = {sat}");
+                Console.WriteLine("=======================================================");
                 foreach (var point in testPoint)
                 {
                     point.Date = DateTime.Now;
@@ -76,7 +77,9 @@ namespace WorkerService1.Workers
                 }
 
                 sat = 2;
+                Console.WriteLine("=======================================================");
                 Console.WriteLine($"START SEND SAT = {sat}");
+                Console.WriteLine("=======================================================");
                 foreach (var point in testPoint)
                 {
                     point.Date = DateTime.Now;
@@ -87,7 +90,11 @@ namespace WorkerService1.Workers
                     await server.SendAsync(data, stoppingToken);
                     await Task.Delay(100, stoppingToken);
                 }
-                await Task.Delay(1000, stoppingToken);
+
+                while (!stoppingToken.IsCancellationRequested)
+                {
+                    await Task.Delay(1000, stoppingToken);
+                }
             }
         }
     }

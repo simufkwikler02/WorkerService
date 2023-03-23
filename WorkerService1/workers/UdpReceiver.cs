@@ -34,8 +34,8 @@ namespace WorkerService1.Workers
 
 
                 ParsePoint(point);
-                Console.WriteLine(point.ToString() + "(Parsed)");
-                writer.Write(point.ToString());
+                Console.WriteLine(point + "(Parsed)");
+                await writer.WriteAsync(point.ToString());
                 await Task.Delay(100, stoppingToken);
             }
         }
