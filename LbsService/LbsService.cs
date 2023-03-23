@@ -10,14 +10,12 @@ namespace LbsLibrary
         {
             if (!File.Exists(filePath))
             {
-                Console.WriteLine("File is not exist");
-                return;
+                throw new FileNotFoundException("File is not exist");
             }
 
             using StreamReader reader = new(filePath);
             this._cellTowerDictionary.Clear();
-            string? line;
-            while ((line = reader.ReadLine()) != null)
+            while (reader.ReadLine() is { } line)
             {
                 var ind = -1;
                 var indBuf = 0;
@@ -28,7 +26,7 @@ namespace LbsLibrary
                     !StringReader.TryParseToInt(line, ref ind, ref indBuf, out int cell) ||
                     !StringReader.TryParseToDouble(line, ref ind, ref indBuf, out double lon) ||
                     !StringReader.TryParseToDouble(line, ref ind, ref indBuf, out double lat))
-                    return;
+                    continue;
 
                 var lbs = new Lbs { Mcc = mcc, Net = net, Area = area, Cell = cell };
                 var lonLat = new Сoordinates { Lat = lat, Lon = lon };

@@ -1,8 +1,7 @@
-﻿using System.Text;
-using System.Globalization;
+﻿using System.Globalization;
+using System.Text;
 
-
-namespace ConsoleApp_work
+namespace CsvService
 {
     public class FileData
     {

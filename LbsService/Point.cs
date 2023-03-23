@@ -7,11 +7,11 @@ namespace LbsLibrary
     {
         public DateTime Date { get; set; }
 
-        public Сoordinates СoordinatesRecord { get; set; }
+        public Сoordinates Сoordinates { get; set; }
 
         public int Sat { get; set; }
 
-        public Lbs LbsRecord { get; set; }
+        public Lbs Lbs { get; set; }
 
         public static bool TryParse(string line, out Point point)
         {
@@ -31,9 +31,9 @@ namespace LbsLibrary
             var lbs = new Lbs { Mcc = mcc, Net = net, Area = area, Cell = cell };
             var coordinates = new Сoordinates() { Lon = lon, Lat = lat };
             point.Date = time;
-            point.LbsRecord = lbs;
+            point.Lbs = lbs;
             point.Sat = sat;
-            point.СoordinatesRecord = coordinates;
+            point.Сoordinates = coordinates;
             return true;
         }
 
@@ -41,13 +41,13 @@ namespace LbsLibrary
         {
             StringBuilder outLine = new();
             outLine.Append(this.Date).Append(',');
-            outLine.Append(this.СoordinatesRecord.Lon.ToString(CultureInfo.InvariantCulture)).Append(',');
-            outLine.Append(this.СoordinatesRecord.Lat.ToString(CultureInfo.InvariantCulture)).Append(',');
+            outLine.Append(this.Сoordinates.Lon.ToString(CultureInfo.InvariantCulture)).Append(',');
+            outLine.Append(this.Сoordinates.Lat.ToString(CultureInfo.InvariantCulture)).Append(',');
             outLine.Append(this.Sat).Append(',');
-            outLine.Append(this.LbsRecord.Mcc).Append(',');
-            outLine.Append(this.LbsRecord.Net).Append(',');
-            outLine.Append(this.LbsRecord.Area).Append(',');
-            outLine.Append(this.LbsRecord.Cell).AppendLine();
+            outLine.Append(this.Lbs.Mcc).Append(',');
+            outLine.Append(this.Lbs.Net).Append(',');
+            outLine.Append(this.Lbs.Area).Append(',');
+            outLine.Append(this.Lbs.Cell).AppendLine();
 
             return outLine.ToString();
         }

@@ -1,8 +1,8 @@
-﻿using System.Text;
-using System.Net.Sockets;
+﻿using System.Net.Sockets;
+using System.Text;
 using LbsLibrary;
 
-namespace WorkerService1
+namespace WorkerService1.Workers
 {
     public class UdpReceiver : BackgroundService
     {
@@ -42,9 +42,9 @@ namespace WorkerService1
 
         private void ParsePoint(Point point)
         {
-            if (point.Sat >= 3 || !this._lbsService.TryGetLatLng(point.LbsRecord, out Сoordinates coordinates)) return;
+            if (point.Sat >= 3 || !this._lbsService.TryGetLatLng(point.Lbs, out Сoordinates coordinates)) return;
 
-            point.СoordinatesRecord = coordinates;
+            point.Сoordinates = coordinates;
             point.Sat = 0;
         }
     }
