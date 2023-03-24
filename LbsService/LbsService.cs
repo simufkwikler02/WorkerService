@@ -5,9 +5,9 @@
         //private readonly Dictionary<Lbs, CellTower> _cellTowerDictionary = new();
         private const string FilePath = "D:\\out_257.csv";
 
-        private readonly Lazy<Dictionary<Lbs, CellTower>> _cellTowerDictionary = new(ReadAndSave());
+        private readonly Lazy<Dictionary<Lbs, CellTower>> _cellTowerDictionary = new(ReadAndSave);
 
-        public static Dictionary<Lbs, CellTower> ReadAndSave()
+        private static Dictionary<Lbs, CellTower> ReadAndSave()
         {
             var cellTowerDictionary = new Dictionary<Lbs, CellTower>();
 
