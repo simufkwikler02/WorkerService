@@ -7,11 +7,14 @@ namespace WorkerService1.Workers
     public class UdpReceiver : BackgroundService
     {
         private readonly LbsService _lbsService;
+        private readonly ILogger<UdpReceiver> _logger;
         private const string PathSave = "ResultPoint\\outPoint.csv";
 
-        public UdpReceiver(LbsService service)
+        public UdpReceiver(LbsService service, ILogger<UdpReceiver> logger)
         {
             _lbsService = service;
+            _logger = logger;
+
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -29,23 +32,23 @@ namespace WorkerService1.Workers
                     continue;
                 }
                 
-                Console.WriteLine("----------------------------------------------------------");
-                Console.WriteLine(message + "(Received)");
-
-
-                ParsePoint(point);
-                Console.WriteLine(point + "(Parsed)");
+                ValidationPoint(point);
+                _logger.LogInformation("Received point --> {point}" , point);
                 await writer.WriteAsync(point.ToString());
                 await Task.Delay(100, stoppingToken);
             }
         }
 
-        private void ParsePoint(Point point)
+        private void ValidationPoint(Point point)
         {
-            if (point.Sat >= 3 || !this._lbsService.TryGetLatLng(point.Lbs, out Coordinates coordinates)) return;
+            if (point.Sat >= 3)
+                return;
 
-            point.Coordinates = coordinates;
-            point.Sat = 0;
+            if (!this._lbsService.TryGetLatLng(point.Lbs, out Coordinates coordinates))
+            {
+                point.Coordinates = coordinates;
+                point.Sat = 0;
+            }
         }
     }
 }

@@ -11,12 +11,13 @@ namespace WorkerService1.Workers
     public class UdpSender : BackgroundService
     {
         private readonly LbsService _lbsService;
-
+        private readonly ILogger<UdpSender> _logger;
         private readonly VectorLayer _layer = Drivers.Gpx.OpenLayer(@"TestPoint\Point.gpx");
 
-        public UdpSender(LbsService service)
+        public UdpSender(LbsService service, ILogger<UdpSender> logger)
         {
             _lbsService = service;
+            _logger = logger;
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -58,10 +59,13 @@ namespace WorkerService1.Workers
                 testPoint.Add(point);
             }
 
-
+            var change = true;
             while (!stoppingToken.IsCancellationRequested)
             {
                 var sat = 7;
+                if (change) sat = 2;
+                change = !change;
+
                 Console.WriteLine("=======================================================");
                 Console.WriteLine($"START SEND SAT = {sat}");
                 Console.WriteLine("=======================================================");
@@ -74,26 +78,6 @@ namespace WorkerService1.Workers
 
                     await server.SendAsync(data, stoppingToken);
                     await Task.Delay(100, stoppingToken);
-                }
-
-                sat = 2;
-                Console.WriteLine("=======================================================");
-                Console.WriteLine($"START SEND SAT = {sat}");
-                Console.WriteLine("=======================================================");
-                foreach (var point in testPoint)
-                {
-                    point.Date = DateTime.Now;
-                    point.Sat = sat;
-                    var message = point.ToString();
-                    var data = Encoding.UTF8.GetBytes(message);
-
-                    await server.SendAsync(data, stoppingToken);
-                    await Task.Delay(100, stoppingToken);
-                }
-
-                while (!stoppingToken.IsCancellationRequested)
-                {
-                    await Task.Delay(1000, stoppingToken);
                 }
             }
         }
