@@ -1,4 +1,3 @@
-using WorkerService1;
 using LbsLibrary;
 using WorkerService1.Workers;
 

@@ -3,12 +3,12 @@ namespace LbsLibrary
 {
     public struct Lbs
     {
-        public int Mcc { get; set; }
+        public int Mcc { get; init; }
 
-        public int Net { get; set; }
+        public int Net { get; init; }
 
-        public int Area { get; set; }
+        public int Area { get; init; }
 
-        public int Cell { get; set; }
+        public int Cell { get; init; }
     }
 }

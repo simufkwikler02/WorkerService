@@ -2,8 +2,8 @@
 {
     public struct CellTower
     {
-        public Lbs Lbs { get; set; }
+        public Lbs Lbs { get; init; }
 
-        public Сoordinates LonLat { get; set; }
+        public Coordinates LonLat { get; init; }
     }
 }

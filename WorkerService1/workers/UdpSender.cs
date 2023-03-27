@@ -52,8 +52,8 @@ namespace WorkerService1.Workers
                    !double.TryParse(line[1], NumberStyles.Float, CultureInfo.InvariantCulture, out double lat))
                     continue;
 
-                point.Ñoordinates = new Ñoordinates() { Lat = lat, Lon = lon };
-                point.Lbs = _lbsService.FindLbs(point.Ñoordinates);
+                point.Coordinates = new Coordinates() { Lat = lat, Lon = lon };
+                point.Lbs = _lbsService.FindLbs(point.Coordinates);
 
                 testPoint.Add(point);
             }

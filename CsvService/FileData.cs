@@ -23,10 +23,9 @@ namespace CsvService
 
             var pathSave = pathWrite + FileName;
             await using var writer = File.CreateText(pathSave);
-            string? line;
             var resultLine = new StringBuilder();
 
-            while ((line = reader.ReadLine()) != null)
+            while (reader.ReadLine() is { } line)
             {
                 LineEditor(resultLine, line);
                 writer.Write(resultLine);
@@ -38,23 +37,22 @@ namespace CsvService
         private void LineEditor(StringBuilder outLine, string line)
         {
             outLine.Clear();
-            var indBuf = 0;
             var ind = -1;
 
-            if (!LbsLibrary.StringReader.SkipWords(line, ref ind, ref indBuf))
+            if (!LbsLibrary.CsvParser.NextIndex(line, ref ind))
                 return;
 
             var firstWord = line.AsSpan()[..ind];
 
             if (firstWord.Length != 3 ||
                 !(firstWord[0] == 'G' && firstWord[1] == 'S' && firstWord[2] == 'M') ||
-                !LbsLibrary.StringReader.TryParseToInt(line, ref ind, ref indBuf, out int mcc) ||
-                !LbsLibrary.StringReader.TryParseToInt(line, ref ind, ref indBuf, out int net) ||
-                !LbsLibrary.StringReader.TryParseToInt(line, ref ind, ref indBuf, out int area) ||
-                !LbsLibrary.StringReader.TryParseToInt(line, ref ind, ref indBuf, out int cell) ||
-                !LbsLibrary.StringReader.SkipWords(line, ref ind, ref indBuf) ||
-                !LbsLibrary.StringReader.TryParseToDouble(line, ref ind, ref indBuf, out double lon) ||
-                !LbsLibrary.StringReader.TryParseToDouble(line, ref ind, ref indBuf, out double lat))
+                !LbsLibrary.CsvParser.TryParseToInt(line, ref ind, out int mcc) ||
+                !LbsLibrary.CsvParser.TryParseToInt(line, ref ind, out int net) ||
+                !LbsLibrary.CsvParser.TryParseToInt(line, ref ind, out int area) ||
+                !LbsLibrary.CsvParser.TryParseToInt(line, ref ind, out int cell) ||
+                !LbsLibrary.CsvParser.NextIndex(line, ref ind) ||
+                !LbsLibrary.CsvParser.TryParseToDouble(line, ref ind, out double lon) ||
+                !LbsLibrary.CsvParser.TryParseToDouble(line, ref ind, out double lat))
                 return;
             
             outLine.Append(mcc).Append(',');

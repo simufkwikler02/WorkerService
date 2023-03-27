@@ -42,9 +42,9 @@ namespace WorkerService1.Workers
 
         private void ParsePoint(Point point)
         {
-            if (point.Sat >= 3 || !this._lbsService.TryGetLatLng(point.Lbs, out Сoordinates coordinates)) return;
+            if (point.Sat >= 3 || !this._lbsService.TryGetLatLng(point.Lbs, out Coordinates coordinates)) return;
 
-            point.Сoordinates = coordinates;
+            point.Coordinates = coordinates;
             point.Sat = 0;
         }
     }

@@ -21,18 +21,17 @@
             while (reader.ReadLine() is { } line)
             {
                 var ind = -1;
-                var indBuf = 0;
 
-                if (!StringReader.TryParseToInt(line, ref ind, ref indBuf, out int mcc) ||
-                    !StringReader.TryParseToInt(line, ref ind, ref indBuf, out int net) ||
-                    !StringReader.TryParseToInt(line, ref ind, ref indBuf, out int area) ||
-                    !StringReader.TryParseToInt(line, ref ind, ref indBuf, out int cell) ||
-                    !StringReader.TryParseToDouble(line, ref ind, ref indBuf, out double lon) ||
-                    !StringReader.TryParseToDouble(line, ref ind, ref indBuf, out double lat))
+                if (!CsvParser.TryParseToInt(line, ref ind, out int mcc) ||
+                    !CsvParser.TryParseToInt(line, ref ind, out int net) ||
+                    !CsvParser.TryParseToInt(line, ref ind, out int area) ||
+                    !CsvParser.TryParseToInt(line, ref ind, out int cell) ||
+                    !CsvParser.TryParseToDouble(line, ref ind, out double lon) ||
+                    !CsvParser.TryParseToDouble(line, ref ind, out double lat))
                     continue;
 
                 var lbs = new Lbs { Mcc = mcc, Net = net, Area = area, Cell = cell };
-                var lonLat = new Сoordinates { Lat = lat, Lon = lon };
+                var lonLat = new Coordinates { Lat = lat, Lon = lon };
                 var cellTower = new CellTower { Lbs = lbs, LonLat = lonLat };
                 cellTowerDictionary.Add(lbs, cellTower);
             }
@@ -40,11 +39,11 @@
             return cellTowerDictionary;
         }      
 
-        public bool TryGetLatLng(Lbs lbs, out Сoordinates coordinates)
+        public bool TryGetLatLng(Lbs lbs, out Coordinates coordinates)
         {
             if(!this._cellTowerDictionary.Value.TryGetValue(lbs, out CellTower tower))
             {
-                coordinates = new Сoordinates { Lat = default, Lon = default};
+                coordinates = new Coordinates { Lat = default, Lon = default};
                 return false;
             }
 
@@ -52,7 +51,7 @@
             return true;
         }
 
-        public Lbs FindLbs(Сoordinates coordinates)
+        public Lbs FindLbs(Coordinates coordinates)
         {
             var minLength = double.MaxValue;
             Lbs lbs = new();
@@ -61,9 +60,11 @@
             {
                 var length = Math.Pow(coordinates.Lon - item.Value.LonLat.Lon, 2) 
                            + Math.Pow(coordinates.Lat - item.Value.LonLat.Lat, 2);
-                if (!(length < minLength)) continue;
-                minLength = length;
-                lbs = item.Key;
+                if (length < minLength)
+                {
+                    minLength = length;
+                    lbs = item.Key;
+                }
             }
 
             return lbs;
