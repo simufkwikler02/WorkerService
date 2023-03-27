@@ -77,7 +77,8 @@ namespace WorkerService1.Workers
                     var data = Encoding.UTF8.GetBytes(message);
 
                     await server.SendAsync(data, stoppingToken);
-                    await Task.Delay(100, stoppingToken);
+                    _logger.LogInformation("Send message --> {message}", message);
+                    await Task.Delay(1000, stoppingToken);
                 }
             }
         }

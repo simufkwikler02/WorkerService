@@ -35,7 +35,7 @@ namespace WorkerService1.Workers
                 ValidationPoint(point);
                 _logger.LogInformation("Received point --> {point}" , point);
                 await writer.WriteAsync(point.ToString());
-                await Task.Delay(100, stoppingToken);
+                await Task.Delay(1000, stoppingToken);
             }
         }
 
@@ -44,7 +44,7 @@ namespace WorkerService1.Workers
             if (point.Sat >= 3)
                 return;
 
-            if (!this._lbsService.TryGetLatLng(point.Lbs, out Coordinates coordinates))
+            if (this._lbsService.TryGetLatLng(point.Lbs, out Coordinates coordinates))
             {
                 point.Coordinates = coordinates;
                 point.Sat = 0;
