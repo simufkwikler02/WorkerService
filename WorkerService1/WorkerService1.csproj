@@ -15,8 +15,4 @@
   <ItemGroup>
     <ProjectReference Include="..\LbsService\LbsLibrary.csproj" />
   </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="ResultPoint\" />
-  </ItemGroup>
 </Project>

@@ -20,7 +20,6 @@ namespace WorkerService1.Workers
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
             using var server = new UdpClient(22220);
-            await using var writer = File.CreateText(PathSave); 
 
             while (!stoppingToken.IsCancellationRequested)
             {
@@ -34,7 +33,7 @@ namespace WorkerService1.Workers
                 
                 ValidationPoint(point);
                 _logger.LogInformation("Received point --> {point}" , point);
-                await writer.WriteAsync(point.ToString());
+               
                 await Task.Delay(1000, stoppingToken);
             }
         }
