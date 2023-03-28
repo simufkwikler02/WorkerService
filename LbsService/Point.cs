@@ -17,6 +17,7 @@ namespace LbsLibrary
         {
             point = new Point();
             var ind = -1;
+
             if (!CsvParser.TryParseToDateTime(line, ref ind, out DateTime time) ||
                 !CsvParser.TryParseToDouble(line, ref ind, out double lon) ||
                 !CsvParser.TryParseToDouble(line, ref ind, out double lat) ||
@@ -29,6 +30,7 @@ namespace LbsLibrary
 
             var lbs = new Lbs { Mcc = mcc, Net = net, Area = area, Cell = cell };
             var coordinates = new Coordinates() { Lon = lon, Lat = lat };
+
             point.Date = time;
             point.Lbs = lbs;
             point.Sat = sat;

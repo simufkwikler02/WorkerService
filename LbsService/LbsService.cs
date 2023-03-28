@@ -2,10 +2,11 @@
 {
     public class LbsService
     {
-        //private readonly Dictionary<Lbs, CellTower> _cellTowerDictionary = new();
+        
         private const string FilePath = "D:\\out_257.csv";
 
-        private readonly Lazy<Dictionary<Lbs, CellTower>> _cellTowerDictionary = new(ReadAndSave);
+        private readonly Lazy<Dictionary<Lbs, CellTower>> _lazy = new(ReadAndSave);
+        private Dictionary<Lbs, CellTower> CellTowers => _lazy.Value;
 
         private static Dictionary<Lbs, CellTower> ReadAndSave()
         {
@@ -41,7 +42,7 @@
 
         public bool TryGetLatLng(Lbs lbs, out Coordinates coordinates)
         {
-            if(!this._cellTowerDictionary.Value.TryGetValue(lbs, out CellTower tower))
+            if(!this.CellTowers.TryGetValue(lbs, out CellTower tower))
             {
                 coordinates = new Coordinates { Lat = default, Lon = default};
                 return false;
@@ -56,10 +57,11 @@
             var minLength = double.MaxValue;
             Lbs lbs = new();
 
-            foreach (var item in this._cellTowerDictionary.Value)
+            foreach (var item in this.CellTowers)
             {
                 var length = Math.Pow(coordinates.Lon - item.Value.LonLat.Lon, 2) 
                            + Math.Pow(coordinates.Lat - item.Value.LonLat.Lat, 2);
+                
                 if (length < minLength)
                 {
                     minLength = length;
