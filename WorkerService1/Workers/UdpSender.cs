@@ -5,24 +5,28 @@ using System.Text.RegularExpressions;
 using Aspose.Gis;
 using Aspose.Gis.Geometries;
 using LbsLibrary;
+using Microsoft.Extensions.Options;
+using WorkerService1.ServiceConfig;
 
 namespace WorkerService1.Workers
 {
     public class UdpSender : BackgroundService
     {
         private readonly LbsService _lbsService;
+        private readonly UdpSenderConfig _udpSenderConfig;
         private readonly ILogger<UdpSender> _logger;
         private readonly VectorLayer _layer = Drivers.Gpx.OpenLayer(@"TestPoint\Point.gpx");
 
-        public UdpSender(LbsService service, ILogger<UdpSender> logger)
+        public UdpSender(LbsService service, ILogger<UdpSender> logger, IOptions<UdpSenderConfig> udpSenderConfig)
         {
             _lbsService = service;
             _logger = logger;
+            _udpSenderConfig = udpSenderConfig.Value;
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            using var server = new UdpClient("127.0.0.1", 22220);
+            using var server = new UdpClient(_udpSenderConfig.Ip, _udpSenderConfig.Port);
             
             var s = string.Empty;
             foreach (var feature in _layer)

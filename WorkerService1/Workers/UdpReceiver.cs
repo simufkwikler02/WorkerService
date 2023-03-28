@@ -1,24 +1,27 @@
 ﻿using System.Net.Sockets;
 using System.Text;
 using LbsLibrary;
+using Microsoft.Extensions.Options;
+using WorkerService1.ServiceConfig;
 
 namespace WorkerService1.Workers
 {
     public class UdpReceiver : BackgroundService
     {
         private readonly LbsService _lbsService;
+        private readonly UdpReceiverConfig _udpSenderConfig;
         private readonly ILogger<UdpReceiver> _logger;
 
-        public UdpReceiver(LbsService service, ILogger<UdpReceiver> logger)
+        public UdpReceiver(LbsService service, ILogger<UdpReceiver> logger, IOptions<UdpReceiverConfig> udpReceiverConfig)
         {
             _lbsService = service;
             _logger = logger;
-
+            _udpSenderConfig = udpReceiverConfig.Value;
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            using var server = new UdpClient(22220);
+            using var server = new UdpClient(_udpSenderConfig.Port);
 
             while (!stoppingToken.IsCancellationRequested)
             {
