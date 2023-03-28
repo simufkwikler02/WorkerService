@@ -25,7 +25,7 @@ namespace WorkerService1.Workers
             using var server = new UdpClient("127.0.0.1", 22220);
             
             var s = string.Empty;
-            foreach (var feature in this._layer)
+            foreach (var feature in _layer)
             {
                 if (feature.Geometry.GeometryType == GeometryType.MultiLineString)
                 {
@@ -75,8 +75,8 @@ namespace WorkerService1.Workers
                     var message = point.ToString();
                     var data = Encoding.UTF8.GetBytes(message);
 
-                    await server.SendAsync(data, stoppingToken);
                     _logger.LogInformation("Send message --> {message}", message);
+                    await server.SendAsync(data, stoppingToken);
                     await Task.Delay(1000, stoppingToken);
                 }
             }

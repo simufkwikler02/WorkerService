@@ -8,7 +8,6 @@ namespace WorkerService1.Workers
     {
         private readonly LbsService _lbsService;
         private readonly ILogger<UdpReceiver> _logger;
-        private const string PathSave = "ResultPoint\\outPoint.csv";
 
         public UdpReceiver(LbsService service, ILogger<UdpReceiver> logger)
         {
@@ -27,9 +26,8 @@ namespace WorkerService1.Workers
                 var message = Encoding.UTF8.GetString(result.Buffer);
                 
                 if (!Point.TryParse(message, out var point))
-                {
                     continue;
-                }
+                
                 
                 ValidationPoint(point);
                 _logger.LogInformation("Received point --> {point}" , point);
@@ -43,7 +41,7 @@ namespace WorkerService1.Workers
             if (point.Sat >= 3)
                 return;
 
-            if (this._lbsService.TryGetLatLng(point.Lbs, out Coordinates coordinates))
+            if (_lbsService.TryGetLatLng(point.Lbs, out Coordinates coordinates))
             {
                 point.Coordinates = coordinates;
                 point.Sat = 0;
