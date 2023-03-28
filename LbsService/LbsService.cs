@@ -5,10 +5,9 @@
         
         private const string FilePath = "D:\\out_257.csv";
 
-        private readonly Lazy<Dictionary<Lbs, CellTower>> _lazy = new(ReadAndSave);
         private Dictionary<Lbs, CellTower> CellTowers => _lazy.Value;
 
-        private static Dictionary<Lbs, CellTower> ReadAndSave()
+        private readonly Lazy<Dictionary<Lbs, CellTower>> _lazy = new(() =>
         {
             var cellTowerDictionary = new Dictionary<Lbs, CellTower>();
 
@@ -38,7 +37,8 @@
             }
 
             return cellTowerDictionary;
-        }      
+        }
+        );
 
         public bool TryGetLatLng(Lbs lbs, out Coordinates coordinates)
         {
