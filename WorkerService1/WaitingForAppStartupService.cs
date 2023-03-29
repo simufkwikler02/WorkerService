@@ -1,6 +1,4 @@
-﻿using Microsoft.Extensions.Hosting;
-
-namespace WorkerService1;
+﻿namespace WorkerService1;
 
 public class WaitingForAppStartupService
 {
