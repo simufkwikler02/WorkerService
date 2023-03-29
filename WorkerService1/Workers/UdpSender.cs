@@ -13,19 +13,24 @@ namespace WorkerService1.Workers
     public class UdpSender : BackgroundService
     {
         private readonly LbsService _lbsService;
-        private readonly UdpSenderConfig _udpSenderConfig;
         private readonly ILogger<UdpSender> _logger;
+        private readonly UdpSenderConfig _udpSenderConfig;
+        private readonly WaitingForAppStartupService _waitingService;
         private readonly VectorLayer _layer = Drivers.Gpx.OpenLayer(@"TestPoint\Point.gpx");
 
-        public UdpSender(LbsService service, ILogger<UdpSender> logger, IOptions<UdpSenderConfig> udpSenderConfig)
+        public UdpSender(LbsService service, ILogger<UdpSender> logger, IOptions<UdpSenderConfig> udpSenderConfig, WaitingForAppStartupService waitService)
         {
             _lbsService = service;
             _logger = logger;
             _udpSenderConfig = udpSenderConfig.Value;
+            _waitingService = waitService;
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
+            if (!await _waitingService.WaitForAppStartup(stoppingToken))
+                return;
+
             using var server = new UdpClient(_udpSenderConfig.Ip, _udpSenderConfig.Port);
             
             var s = string.Empty;

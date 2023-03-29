@@ -9,18 +9,23 @@ namespace WorkerService1.Workers
     public class UdpReceiver : BackgroundService
     {
         private readonly LbsService _lbsService;
-        private readonly UdpReceiverConfig _udpSenderConfig;
         private readonly ILogger<UdpReceiver> _logger;
+        private readonly UdpReceiverConfig _udpSenderConfig;
+        private readonly WaitingForAppStartupService _waitingService;
 
-        public UdpReceiver(LbsService service, ILogger<UdpReceiver> logger, IOptions<UdpReceiverConfig> udpReceiverConfig)
+        public UdpReceiver(LbsService service, ILogger<UdpReceiver> logger, IOptions<UdpReceiverConfig> udpReceiverConfig, WaitingForAppStartupService waitService)
         {
             _lbsService = service;
             _logger = logger;
             _udpSenderConfig = udpReceiverConfig.Value;
+            _waitingService = waitService;
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
+            if (!await _waitingService.WaitForAppStartup(stoppingToken))
+                return;
+
             using var server = new UdpClient(_udpSenderConfig.Port);
 
             while (!stoppingToken.IsCancellationRequested)
