@@ -41,7 +41,7 @@ namespace LbsLibrary
         public override string ToString()
         {
             StringBuilder outLine = new();
-            outLine.Append(this.Date.ToString("yyyy-MM-ddTHH:mm:sszzz")).Append(',');
+            outLine.Append(this.Date.ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ssZ")).Append(',');
             outLine.Append(this.Coordinates.Lon.ToString(CultureInfo.InvariantCulture)).Append(',');
             outLine.Append(this.Coordinates.Lat.ToString(CultureInfo.InvariantCulture)).Append(',');
             outLine.Append(this.Sat).Append(',');
