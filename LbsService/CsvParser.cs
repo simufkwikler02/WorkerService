@@ -21,7 +21,7 @@ namespace LbsLibrary
 
             if (!int.TryParse(line.AsSpan().Slice(leftIndex + 1, ind - leftIndex - 1), out result))
             {
-                Console.WriteLine($"line convert error,line skipped");
+                Console.WriteLine("line convert error,line skipped");
                 return false;
             }
 
@@ -39,7 +39,7 @@ namespace LbsLibrary
            
             if (!double.TryParse(line.AsSpan().Slice(leftIndex + 1, ind - leftIndex - 1), NumberStyles.Float, CultureInfo.InvariantCulture, out result))
             {
-                Console.WriteLine($"line convert error,line skipped");
+                Console.WriteLine("line convert error,line skipped");
                 return false;
             }
             
@@ -57,7 +57,7 @@ namespace LbsLibrary
 
             if (!DateTime.TryParse(line.AsSpan().Slice(leftIndex + 1, ind - leftIndex - 1), out result))
             {
-                Console.WriteLine($"line convert error,line skipped");
+                Console.WriteLine("line convert error,line skipped");
                 return false;
             }
 
